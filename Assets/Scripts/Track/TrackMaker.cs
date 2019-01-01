@@ -72,12 +72,13 @@ public class TrackMaker : MonoBehaviour {
 			int i8 = i * 8;
 			int i48 = i8 * 6;
 			t += wallInterval;
+			//Debug.DrawLine(new Vector3(x, y), new Vector3((ax * t + bx) * t + cx, (ay * t + by) * t + cy), Color.red);
 			x = (ax * t + bx) * t + cx;
 			y = (ay * t + by) * t + cy;
 
 			//Find wall and collider points
-			xSlope = FindSlope(ax, bx, 1);
-			ySlope = FindSlope(ay, by, 1);
+			xSlope = FindSlope(ax, bx, t);
+			ySlope = FindSlope(ay, by, t);
 			//Left side
 			FindLeftEdges(x, y, xSlope, ySlope, out collider, out outerWall, out innerWall);
 			leftColliderPoints[i + 1] = collider;
@@ -100,7 +101,6 @@ public class TrackMaker : MonoBehaviour {
 				triangles[i48 + index] = i8 + indices[index];
 			}
 		}
-		
 
 		//Update last values
 		segmentColliders[0].points = leftColliderPoints;
