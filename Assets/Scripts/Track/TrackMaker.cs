@@ -40,16 +40,6 @@ public class TrackMaker : MonoBehaviour {
 		newPiece.SetData(x1, y1, ax, bx, cx, ay, by, cy);
 		pieceHistory.Push(newPiece);
 
-		//TEMP
-		int i = 0;
-		for (float t = 0, wallInterval = 1f / segmentCount; i < segmentCount; i++) {
-			t += wallInterval;
-			Debug.DrawLine(new Vector3(x, y), new Vector3((ax * t + bx) * t + cx, (ay * t + by) * t + cy), Color.red);
-			x = (ax * t + bx) * t + cx;
-			y = (ay * t + by) * t + cy;
-		}
-
-		/*
 		//Find segment locations along the path and construct a mesh and colliders
 		Mesh mesh = new Mesh();
 		newPiece.GetComponent<MeshFilter>().mesh = mesh;
@@ -61,57 +51,51 @@ public class TrackMaker : MonoBehaviour {
 		Vector2[] leftColliderPoints = new Vector2[segmentCount + 1];
 		Vector2[] rightColliderPoints = new Vector2[segmentCount + 1];
 		int i = 0;
-		float antiA = float.NaN, antiB = float.NaN, wallDX = 0;
+
 		//First iteration
-		if (localSlope > 1e-4 || localSlope < -1e-4) {
-			FindAntiSlope(x, y, localSlope, out antiA, out antiB);
-			wallDX = (antiA > 0 ? 1 : -1) / Mathf.Sqrt(antiA * antiA + 1);
-		}
 		//Left side
-		FindLeftEdges(isRight, x, y, localSlope, wallDX, antiA, antiB, out float colliderX, out float outerWallX, out float innerWallX, out float colliderY, out float outerWallY, out float innerWallY);
-		leftColliderPoints[0] = new Vector2(colliderX, colliderY);
-		vertices[0] = new Vector3(outerWallX, outerWallY, -2 * wallWidth);
-		vertices[1] = new Vector3(innerWallX, innerWallY, -2 * wallWidth);
-		vertices[2] = new Vector3(innerWallX, innerWallY, 0);
-		vertices[3] = new Vector3(outerWallX, outerWallY, 0);
+		FindLeftEdges(x, y, xSlope, ySlope, out Vector2 collider, out Vector3 outerWall, out Vector3 innerWall);
+		leftColliderPoints[0] = collider;
+		vertices[0] = outerWall - new Vector3(0, 0, 2 * wallWidth);
+		vertices[1] = innerWall - new Vector3(0, 0, 2 * wallWidth);
+		vertices[2] = innerWall;
+		vertices[3] = outerWall;
 		//Right side
-		FindRightEdges(isRight, x, y, localSlope, wallDX, antiA, antiB, out colliderX, out outerWallX, out innerWallX, out colliderY, out outerWallY, out innerWallY);
-		rightColliderPoints[0] = new Vector2(colliderX, colliderY);
-		vertices[4] = new Vector3(outerWallX, outerWallY, -2 * wallWidth);
-		vertices[5] = new Vector3(innerWallX, innerWallY, -2 * wallWidth);
-		vertices[6] = new Vector3(innerWallX, innerWallY, 0);
-		vertices[7] = new Vector3(outerWallX, outerWallY, 0);
+		FindRightEdges(x, y, xSlope, ySlope, out collider, out outerWall, out innerWall);
+		rightColliderPoints[0] = collider;
+		vertices[4] = outerWall - new Vector3(0, 0, 2 * wallWidth);
+		vertices[5] = innerWall - new Vector3(0, 0, 2 * wallWidth);
+		vertices[6] = innerWall;
+		vertices[7] = outerWall;
 		//Subsequent iterations
-		for (float wallInterval = (x1 - x) / segmentCount; i < segmentCount; i++) {
+		for (float t = 0, wallInterval = 1f / segmentCount; i < segmentCount; i++) {
 			int i8 = i * 8;
 			int i48 = i8 * 6;
-			x += wallInterval;
-			y = a * x * x + b * x + c;
+			t += wallInterval;
+			x = (ax * t + bx) * t + cx;
+			y = (ay * t + by) * t + cy;
 
 			//Find wall and collider points
-			localSlope = FindSlope(a, b, x);
-			if (localSlope > 1e-4 || localSlope < -1e-4) {
-				FindAntiSlope(x, y, localSlope, out antiA, out antiB);
-				wallDX = (antiA > 0 ? 1 : -1) / Mathf.Sqrt(antiA * antiA + 1);
-			}
+			xSlope = FindSlope(ax, bx, 1);
+			ySlope = FindSlope(ay, by, 1);
 			//Left side
-			FindLeftEdges(isRight, x, y, localSlope, wallDX, antiA, antiB, out colliderX, out outerWallX, out innerWallX, out colliderY, out outerWallY, out innerWallY);
-			leftColliderPoints[i + 1] = new Vector2(colliderX, colliderY);
-			vertices[i8 + 8] = new Vector3(outerWallX, outerWallY, -2 * wallWidth);
-			vertices[i8 + 9] = new Vector3(innerWallX, innerWallY, -2 * wallWidth);
-			vertices[i8 + 10] = new Vector3(innerWallX, innerWallY, 0);
-			vertices[i8 + 11] = new Vector3(outerWallX, outerWallY, 0);
+			FindLeftEdges(x, y, xSlope, ySlope, out collider, out outerWall, out innerWall);
+			leftColliderPoints[i + 1] = collider;
+			vertices[i8 + 8] = outerWall - new Vector3(0, 0, 2 * wallWidth);
+			vertices[i8 + 9] = innerWall - new Vector3(0, 0, 2 * wallWidth);
+			vertices[i8 + 10] = innerWall;
+			vertices[i8 + 11] = outerWall;
 			int[] indices = new int[] { 0, 8, 9, 0, 9, 1, 1, 9, 10, 1, 10, 2, 3, 10, 11, 3, 2, 10, 0, 11, 8, 0, 3, 11, 13, 12, 4, 5, 13, 4, 14, 13, 5, 6, 14, 5, 15, 14, 7, 14, 6, 7, 12, 15, 4, 15, 7, 4 };
 			for (int index = 0; index < 24; index++) {
 				triangles[i48 + index] = i8 + indices[index];
 			}
 			//Right side
-			FindRightEdges(isRight, x, y, localSlope, wallDX, antiA, antiB, out colliderX, out outerWallX, out innerWallX, out colliderY, out outerWallY, out innerWallY);
-			rightColliderPoints[i + 1] = new Vector2(colliderX, colliderY);
-			vertices[i8 + 12] = new Vector3(outerWallX, outerWallY, -2 * wallWidth);
-			vertices[i8 + 13] = new Vector3(innerWallX, innerWallY, -2 * wallWidth);
-			vertices[i8 + 14] = new Vector3(innerWallX, innerWallY, 0);
-			vertices[i8 + 15] = new Vector3(outerWallX, outerWallY, 0);
+			FindRightEdges(x, y, xSlope, ySlope, out collider, out outerWall, out innerWall);
+			rightColliderPoints[i + 1] = collider;
+			vertices[i8 + 12] = outerWall - new Vector3(0, 0, 2 * wallWidth);
+			vertices[i8 + 13] = innerWall - new Vector3(0, 0, 2 * wallWidth);
+			vertices[i8 + 14] = innerWall;
+			vertices[i8 + 15] = outerWall;
 			for (int index = 24; index < 48; index++) {
 				triangles[i48 + index] = i8 + indices[index];
 			}
@@ -125,7 +109,6 @@ public class TrackMaker : MonoBehaviour {
 		mesh.triangles = triangles;
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
-		*/
 		x = x1;
 		y = y1;
 		return true;
@@ -154,49 +137,22 @@ public class TrackMaker : MonoBehaviour {
 		cy = 0;
 	}
 
-	void FindLeftEdges(bool isRight, float x, float y, float localSlope, float wallDX, float antiA, float antiB, out float colliderX, out float outerWallX, out float innerWallX, out float colliderY, out float outerWallY, out float innerWallY) {
-		if (localSlope > 1e-4 || localSlope < -1e-4) {
-			colliderX = isRight ? x + wallDX * trackWidth : x - wallDX * trackWidth;
-			outerWallX = isRight ? x + wallDX * (trackWidth + wallWidth) : x - wallDX * (trackWidth + wallWidth);
-			innerWallX = isRight ? x + wallDX * (trackWidth - wallWidth) : x - wallDX * (trackWidth - wallWidth);
-			colliderY = antiA * colliderX + antiB;
-			outerWallY = antiA * outerWallX + antiB;
-			innerWallY = antiA * innerWallX + antiB;
-		} else {
-			colliderX = x;
-			outerWallX = x;
-			innerWallX = x;
-			colliderY = isRight ? y + trackWidth : y - trackWidth;
-			outerWallY = isRight ? colliderY + wallWidth : colliderY - wallWidth;
-			innerWallY = isRight ? colliderY - wallWidth : colliderY + wallWidth;
-		}
+	void FindLeftEdges(float x, float y, float xSlope, float ySlope, out Vector2 collider, out Vector3 outerWall, out Vector3 innerWall) {
+		Vector2 direction = new Vector2(-ySlope, xSlope).normalized;
+		collider = new Vector2(x, y) + direction * trackWidth;
+		outerWall = collider + direction * wallWidth;
+		innerWall = collider - direction * wallWidth;
 	}
 
-	void FindRightEdges(bool isRight, float x, float y, float localSlope, float wallDX, float antiA, float antiB, out float colliderX, out float outerWallX, out float innerWallX, out float colliderY, out float outerWallY, out float innerWallY) {
-		if (localSlope > 1e-4 || localSlope < -1e-4) {
-			colliderX = isRight ? x - wallDX * trackWidth : x + wallDX * trackWidth;
-			outerWallX = isRight ? x - wallDX * (trackWidth + wallWidth) : x + wallDX * (trackWidth + wallWidth);
-			innerWallX = isRight ? x - wallDX * (trackWidth - wallWidth) : x + wallDX * (trackWidth - wallWidth);
-			colliderY = antiA * colliderX + antiB;
-			outerWallY = antiA * outerWallX + antiB;
-			innerWallY = antiA * innerWallX + antiB;
-		} else {
-			colliderX = x;
-			outerWallX = x;
-			innerWallX = x;
-			colliderY = isRight ? y - trackWidth : y + trackWidth;
-			outerWallY = isRight ? colliderY - wallWidth : colliderY + wallWidth;
-			innerWallY = isRight ? colliderY + wallWidth : colliderY - wallWidth;
-		}
+	void FindRightEdges(float x, float y, float xSlope, float ySlope, out Vector2 collider, out Vector3 outerWall, out Vector3 innerWall) {
+		Vector2 direction = new Vector2(ySlope, -xSlope).normalized;
+		collider = new Vector2(x, y) + direction * trackWidth;
+		outerWall = collider + direction * wallWidth;
+		innerWall = collider - direction * wallWidth;
 	}
 
 	static float FindSlope(float a, float b, float t) {
 		return 2 * a * t + b;
-	}
-
-	static void FindAntiSlope(float x, float y, float slope, out float a, out float b) {
-		a = -1 / slope;
-		b = y + x / slope;
 	}
 
     static void SolveQuadratic(float slope, float x0, float x1, out float a, out float b, out float c) {
