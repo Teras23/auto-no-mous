@@ -1,23 +1,27 @@
 ﻿using UnityEngine;
 
 public class TrackSegment : MonoBehaviour{
-	float x0, y0, x1, y1, a, b, c;
+	float x, y, ax, bx, cx, ay, by, cy;
 
-	public void SetData(float x0, float y0, float x1, float y1, float a, float b, float c) {
-		this.x0 = x0;
-		this.y0 = y0;
-		this.x1 = x1;
-		this.y1 = y1;
-		this.a = a;
-		this.b = b;
-		this.c = c;
+	public void SetData(float x, float y, float ax, float bx, float cx, float ay, float by, float cy) {
+		this.x = x;
+		this.y = y;
+		this.ax = ax;
+		this.bx = bx;
+		this.cx = cx;
+		this.ay = ay;
+		this.by = by;
+		this.cy = cy;
 	}
 
-	public void GetData(out float x, out float y, out float a, out float b, out float c) {
-		x = x0;
-		y = y0;
-		a = this.a;
-		b = this.b;
-		c = this.c;
+	public void GetData(out float x, out float y, out float ax, out float bx, out float cx, out float ay, out float by, out float cy) {
+		x = this.x;
+		y = this.y;
+		ax = this.ax;
+		bx = this.bx;
+		cx = this.cx;
+		ay = this.ay;
+		by = this.by;
+		cy = this.cy;
 	}
 }

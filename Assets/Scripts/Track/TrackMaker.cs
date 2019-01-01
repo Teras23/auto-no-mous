@@ -6,7 +6,7 @@ public class TrackMaker : MonoBehaviour {
 	public float trackWidth, wallWidth;
 	public int segmentCount;
 	Stack<TrackSegment> pieceHistory = new Stack<TrackSegment>();
-	float x, y, a, b, c;
+	float x, y, ax, bx, cx, ay, by, cy;
 	Camera cam;
 	bool placeSucceeded = false;
 
@@ -30,18 +30,26 @@ public class TrackMaker : MonoBehaviour {
 		Vector3 mouseLoc = forward.origin + forward.direction * distance;
 		float x1 = mouseLoc.x;
 		float y1 = mouseLoc.y;
-		bool isRight = x1 - x > 0;
 
-		//Create a new piece unless it's mathematically impossible
-		if (Mathf.Abs(x - x1) < 1e-4) {
-			return false;
-		}
-		float localSlope = FindSlope(a, b, x);
-		SolveQuadratic(x, y, localSlope, x1, y1, out a, out b, out c);
+		//Create a new piece
+		float xSlope = FindSlope(ax, bx, 1);
+		float ySlope = FindSlope(ay, by, 1);
+		SolveQuadratic(xSlope, x, x1, out ax, out bx, out cx);
+		SolveQuadratic(ySlope, y, y1, out ay, out by, out cy);
 		TrackSegment newPiece = Instantiate(segment, transform);
-		newPiece.SetData(x, y, x1, y1, a, b, c);
+		newPiece.SetData(x1, y1, ax, bx, cx, ay, by, cy);
 		pieceHistory.Push(newPiece);
 
+		//TEMP
+		int i = 0;
+		for (float t = 0, wallInterval = 1f / segmentCount; i < segmentCount; i++) {
+			t += wallInterval;
+			Debug.DrawLine(new Vector3(x, y), new Vector3((ax * t + bx) * t + cx, (ay * t + by) * t + cy), Color.red);
+			x = (ax * t + bx) * t + cx;
+			y = (ay * t + by) * t + cy;
+		}
+
+		/*
 		//Find segment locations along the path and construct a mesh and colliders
 		Mesh mesh = new Mesh();
 		newPiece.GetComponent<MeshFilter>().mesh = mesh;
@@ -108,35 +116,42 @@ public class TrackMaker : MonoBehaviour {
 				triangles[i48 + index] = i8 + indices[index];
 			}
 		}
+		
 
 		//Update last values
-		x = x1;
-		y = y1;
 		segmentColliders[0].points = leftColliderPoints;
 		segmentColliders[1].points = rightColliderPoints;
 		mesh.vertices = vertices;
 		mesh.triangles = triangles;
 		mesh.RecalculateNormals();
 		mesh.RecalculateBounds();
+		*/
+		x = x1;
+		y = y1;
 		return true;
 	}
 
-	public bool Remove() {
-		//Destroy the last piece on the stack and revert to its values
+	public void Remove() {
+		//Destroy the last piece on the stack and revert to the values before that
 		if (pieceHistory.Count > 0) {
 			TrackSegment lastPiece = pieceHistory.Pop();
-			lastPiece.GetData(out x, out y, out a, out b, out c);
 			Destroy(lastPiece.gameObject);
-			return true;
+			if (pieceHistory.Count > 0) {
+				lastPiece = pieceHistory.Peek();
+				lastPiece.GetData(out x, out y, out ax, out bx, out cx, out ay, out by, out cy);
+				return;
+			}
 		}
 
 		//Stack is empty, use default values
 		x = 0;
 		y = 0;
-		a = 0;
-		b = 0;
-		c = 0;
-		return false;
+		ax = 0;
+		bx = 0;
+		cx = 0;
+		ay = 0;
+		by = 0;
+		cy = 0;
 	}
 
 	void FindLeftEdges(bool isRight, float x, float y, float localSlope, float wallDX, float antiA, float antiB, out float colliderX, out float outerWallX, out float innerWallX, out float colliderY, out float outerWallY, out float innerWallY) {
@@ -175,8 +190,8 @@ public class TrackMaker : MonoBehaviour {
 		}
 	}
 
-	static float FindSlope(float a, float b, float x) {
-		return 2 * a * x + b;
+	static float FindSlope(float a, float b, float t) {
+		return 2 * a * t + b;
 	}
 
 	static void FindAntiSlope(float x, float y, float slope, out float a, out float b) {
@@ -184,14 +199,9 @@ public class TrackMaker : MonoBehaviour {
 		b = y + x / slope;
 	}
 
-    static void SolveQuadratic(float x0, float y0, float y, float x1, float y1, out float a, out float b, out float c) {
-		float dx = x0 - x1;
-		float dy = y0 - y1;
-		float d = dx * dx;
-		float x02 = x0 * x0;
-		float x12 = x1 * x1;
-		a = (y * dx - dy) / d;
-		b = (2 * x0 * dy - y * (x02 - x12)) / d;
-		c = (x02 * (x1 * y + y1) - x0 * x1 * (x1 * y + 2 * y0) + x12 * y0) / d;
+    static void SolveQuadratic(float slope, float x0, float x1, out float a, out float b, out float c) {
+		c = x0;
+		b = slope;
+		a = x1 - x0 - slope;
 	}
 }
