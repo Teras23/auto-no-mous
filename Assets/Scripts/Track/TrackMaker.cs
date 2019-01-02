@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TrackMaker : MonoBehaviour {
@@ -7,25 +8,41 @@ public class TrackMaker : MonoBehaviour {
 	public float trackWidth, wallWidth, checkpointWidth;
 	public int segmentCount;
 	Stack<TrackSegment> pieceHistory = new Stack<TrackSegment>();
-	float x, y, ax, bx, cx, ay, by, cy;
+	float x, y, ax = 10, bx, cx = -10, ay, by, cy;
 	Camera cam;
-	bool placeSucceeded = false;
 	int checkpointCounter = 0;
+	bool inBuildMode = false;
 
 	void Awake() {
 		cam = Camera.main;
 	}
 
 	void Update() {
-		if (!Input.GetButtonDown("Fire1") && placeSucceeded) {
-			Remove();
-		}
-		if (!Input.GetButtonDown("Cancel")) {
-			placeSucceeded = PlaceNew();
+		if (Input.GetButtonDown("EnterBuildMode")) {
+			if (inBuildMode) {
+				StopAllCoroutines();
+				Remove();
+			} else {
+				PlaceNew();
+				StartCoroutine(BuildMode());
+			}
+			inBuildMode = !inBuildMode;
 		}
 	}
 
-	public bool PlaceNew() {
+	IEnumerator BuildMode() {
+		while (true) {
+			if (!Input.GetButtonDown("Fire1")) {
+				Remove();
+			}
+			if (!Input.GetButtonDown("Cancel")) {
+				PlaceNew();
+			}
+			yield return null;
+		}
+	}
+
+	void PlaceNew() {
 		//Find coordinate on plane
 		Ray forward = cam.ScreenPointToRay(Input.mousePosition);
 		new Plane(Vector3.back, Vector3.zero).Raycast(forward, out float distance);
@@ -120,7 +137,6 @@ public class TrackMaker : MonoBehaviour {
 		mesh.RecalculateBounds();
 		x = x1;
 		y = y1;
-		return true;
 	}
 
 	public void Remove() {
@@ -139,9 +155,9 @@ public class TrackMaker : MonoBehaviour {
 		//Stack is empty, use default values
 		x = 0;
 		y = 0;
-		ax = 0;
+		ax = 10;
 		bx = 0;
-		cx = 0;
+		cx = -10;
 		ay = 0;
 		by = 0;
 		cy = 0;
