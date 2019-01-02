@@ -3,12 +3,14 @@ using UnityEngine;
 
 public class TrackMaker : MonoBehaviour {
 	public TrackSegment segment;
-	public float trackWidth, wallWidth;
+	public Checkpoint checkpoint;
+	public float trackWidth, wallWidth, checkpointWidth;
 	public int segmentCount;
 	Stack<TrackSegment> pieceHistory = new Stack<TrackSegment>();
 	float x, y, ax, bx, cx, ay, by, cy;
 	Camera cam;
 	bool placeSucceeded = false;
+	int checkpointCounter = 0;
 
 	void Awake() {
 		cam = Camera.main;
@@ -100,6 +102,13 @@ public class TrackMaker : MonoBehaviour {
 			for (int index = 24; index < 48; index++) {
 				triangles[i48 + index] = i8 + indices[index];
 			}
+
+			//Add checkpoints
+			Checkpoint cp = Instantiate(checkpoint, newPiece.transform);
+			EdgeCollider2D cpCollider = cp.GetComponent<EdgeCollider2D>();
+			cpCollider.edgeRadius = checkpointWidth;
+			cpCollider.points = new Vector2[] { leftColliderPoints[i + 1], rightColliderPoints[i + 1] };
+			cp.order = checkpointCounter++;
 		}
 
 		//Update last values
@@ -119,6 +128,7 @@ public class TrackMaker : MonoBehaviour {
 		if (pieceHistory.Count > 0) {
 			TrackSegment lastPiece = pieceHistory.Pop();
 			Destroy(lastPiece.gameObject);
+			checkpointCounter -= segmentCount;
 			if (pieceHistory.Count > 0) {
 				lastPiece = pieceHistory.Peek();
 				lastPiece.GetData(out x, out y, out ax, out bx, out cx, out ay, out by, out cy);
