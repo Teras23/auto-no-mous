@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using UnityEngine;
 
 public class CarMovement : MonoBehaviour
@@ -13,22 +13,29 @@ public class CarMovement : MonoBehaviour
     public float speedMultiplier = 20f;
 
     public float rotMultiplierLimit = 1.1f;
+
     public float RotationMultiplier =>
-        -Math.Min(_rigidBody.velocity.magnitude * 0.1f, Math.Abs(rotMultiplierLimit) < 0.1 ? float.MaxValue : rotMultiplierLimit);
+        -Mathf.Min(_rigidBody.velocity.magnitude * 0.1f,
+            Mathf.Abs(rotMultiplierLimit) < 0.1 ? float.MaxValue : rotMultiplierLimit);
+
+    [SerializeField]
+    public float[] debugSensorValues;
 
     private Rigidbody2D _rigidBody;
-    private float?[] _sensorOutput;
+    private CarSensor[] _sensors;
 
+    public CarSensor.SensorData[] SensorData =>
+        _sensors == null ? new CarSensor.SensorData[0] : _sensors.Select(x => x.Data).ToArray();
 
-    // Start is called before the first frame update
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
         _rigidBody.angularDrag = drag;
         _rigidBody.drag = angularDrag;
+
+        _sensors = GetComponentsInChildren<CarSensor>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isManual)
@@ -40,7 +47,7 @@ public class CarMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        // do sth with sensors
+        debugSensorValues = SensorData.Select(x => x.Distance).ToArray();
     }
 
     public void Turn(float amount)
