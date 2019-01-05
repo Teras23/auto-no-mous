@@ -87,6 +87,8 @@ public class NeuralNetwork : MonoBehaviour
         return layer.AsArray();
     }
 
+    private const double MutationChance = 0.4;
+    
     public static Tuple<List<Matrix<double>>, List<Vector<double>>> merge(NeuralNetwork network1,
         NeuralNetwork network2)
     {
@@ -95,6 +97,7 @@ public class NeuralNetwork : MonoBehaviour
         
         for (var i = 0; i < newWeights.Count; i++)
         {
+            
             network1.weights[i].CopyTo(newWeights[i]);   
         }
         

@@ -22,20 +22,38 @@ public class SimpleGameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Physics2D.IgnoreLayerCollision(Physics.IgnoreRaycastLayer, Physics.IgnoreRaycastLayer);
+        _cars = new GameObject[nrOfCars];   
+    }
 
-        _cars = new GameObject[nrOfCars];
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetButtonDown("Play"))
+        {
+            ClearCars();
+            SpawnCars();
+        }
+    }
+
+    public void ClearCars()
+    { 
+        for(var i = 0; i < _cars.Length; i++)
+        {
+            if (_cars[i] != null)
+            {
+                Destroy(_cars[i]);
+                _cars[i] = null;
+            }
+        }
+    }
+    
+    private void SpawnCars()
+    {
         for (var i = 0; i < nrOfCars; i++)
         {
             var car = Instantiate(carPrefab);
             car.GetComponent<CombinedCarController>().AI = true;
             _cars[i] = car;
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }
