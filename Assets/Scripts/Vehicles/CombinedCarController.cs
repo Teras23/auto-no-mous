@@ -7,7 +7,8 @@ public class CombinedCarController : MonoBehaviour {
 	public bool AI;
 
     private CarSensor[] _sensors;
-
+    private NeuralNetwork _neuralNetwork;
+    
     public float[] debugSensorValues;
     
     public CarSensor.SensorData[] SensorData =>
@@ -20,13 +21,16 @@ public class CombinedCarController : MonoBehaviour {
 		maxTurn *= Mathf.Deg2Rad;
 
         _sensors = GetComponentsInChildren<CarSensor>();
+        _neuralNetwork = GetComponent<NeuralNetwork>();
     }
 
 	void FixedUpdate() {
         debugSensorValues = SensorData.Select(x => x.Distance).ToArray();
 
-        if (AI) {
-			ControlVehicle(0, 0); //TODO: Hook up to NN
+        if (AI)
+        {
+	        var results = _neuralNetwork.calculate(SensorData.Select(x => (double)x.Distance).ToArray());
+	        ControlVehicle((float) results[0], (float) results[1]); //TODO: Hook up to NN
 		} else {
 			ControlVehicle(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
 		}

@@ -7,7 +7,9 @@ using UnityEngine;
 public class NeuralNetwork : MonoBehaviour
 {
     public List<int> hiddenLayers;
-
+    public int inputSize;
+    public int outputSize;
+    
     private static double softplusRelu(double x)
     {
         return Math.Log(1 + Math.Pow(Math.E, x));
@@ -17,9 +19,6 @@ public class NeuralNetwork : MonoBehaviour
     {
         return 1 / (1 + Math.Pow(Math.E, -x));
     }
-
-    private const int InputSize = 2;
-    private const int OutputSize = 2;
 
     private List<Matrix<double>> weights;
     private List<Vector<double>> biases;
@@ -33,7 +32,7 @@ public class NeuralNetwork : MonoBehaviour
         for (var i = 0; i < hiddenLayers.Count; i++)
         {
             var layerSize = hiddenLayers[i];
-            var lastLayerSize = i - 1 < 0 ? InputSize : hiddenLayers[i - 1];
+            var lastLayerSize = i - 1 < 0 ? inputSize : hiddenLayers[i - 1];
 
             var hiddenLayer = Matrix<double>.Build.Random(lastLayerSize, layerSize);
 
@@ -45,10 +44,10 @@ public class NeuralNetwork : MonoBehaviour
         }
 
         // Matrix and bias for last hidden layer connection to output
-        var outputLayer = Matrix<double>.Build.Random(hiddenLayers[hiddenLayers.Count - 1], OutputSize);
+        var outputLayer = Matrix<double>.Build.Random(hiddenLayers[hiddenLayers.Count - 1], outputSize);
         weights.Add(outputLayer);
         
-        var outputBias = Vector<double>.Build.Random(OutputSize);
+        var outputBias = Vector<double>.Build.Random(outputSize);
         biases.Add(outputBias);
 
         var results = calculate(0.5, 0.3);
@@ -58,9 +57,9 @@ public class NeuralNetwork : MonoBehaviour
 
     public double[] calculate(params double[] input)
     {
-        if (input.Length != InputSize)
+        if (input.Length != inputSize)
         {
-            Debug.LogError("Arguments amount " + input.Length + " does not match input layer size " + InputSize);
+            Debug.LogError("Arguments amount " + input.Length + " does not match input layer size " + inputSize);
             throw new InvalidParameterException();
         }
 
@@ -75,5 +74,24 @@ public class NeuralNetwork : MonoBehaviour
         
         // Last layer to be calculated is the output
         return layer.AsArray();
+    }
+
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> merge(NeuralNetwork network1,
+        NeuralNetwork network2)
+    {
+        List<Matrix<double>> newWeights = new List<Matrix<double>>(network1.weights.Count);
+        List<Vector<double>> newBiases = new List<Vector<double>>(network1.biases.Count);
+        
+        for (var i = 0; i < newWeights.Count; i++)
+        {
+            network1.weights[i].CopyTo(newWeights[i]);   
+        }
+        
+        for (var i = 0; i < newBiases.Count; i++)
+        {
+            network1.biases[i].CopyTo(newBiases[i]);   
+        }
+        
+        return new Tuple<List<Matrix<double>>, List<Vector<double>>>(newWeights, newBiases);
     }
 }
