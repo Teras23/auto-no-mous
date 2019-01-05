@@ -23,6 +23,8 @@ public class NeuralNetwork : MonoBehaviour
     private List<Matrix<double>> weights;
     private List<Vector<double>> biases;
 
+    private bool _initiated = false; // Was doing calculations before a car was initiated
+    
     void Start()
     {
         weights = new List<Matrix<double>>(hiddenLayers.Count);
@@ -49,10 +51,7 @@ public class NeuralNetwork : MonoBehaviour
         
         var outputBias = Vector<double>.Build.Random(outputSize);
         biases.Add(outputBias);
-
-        var results = calculate(0.5, 0.3);
-
-        Debug.Log(results[0] + " " + results[1]);
+        _initiated = true;
     }
 
     public double[] calculate(params double[] input)
@@ -61,6 +60,18 @@ public class NeuralNetwork : MonoBehaviour
         {
             Debug.LogError("Arguments amount " + input.Length + " does not match input layer size " + inputSize);
             throw new InvalidParameterException();
+        }
+
+        if (!_initiated)
+        {
+            var output = new double[outputSize];
+
+            for (var i = 0; i < output.Length; i++)
+            {
+                output[i] = 0.0;
+            }
+            
+            return output;
         }
 
         // First layer is the input layer

@@ -30,7 +30,7 @@ public class CombinedCarController : MonoBehaviour {
         if (AI)
         {
 	        var results = _neuralNetwork.calculate(SensorData.Select(x => (double)x.Distance).ToArray());
-	        ControlVehicle((float) results[0], (float) results[1]); //TODO: Hook up to NN
+	        ControlVehicle((float) results[0], (float) results[1] * 2.0f - 1.0f); //TODO: Hook up to NN
 		} else {
 			ControlVehicle(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
 		}
@@ -45,7 +45,7 @@ public class CombinedCarController : MonoBehaviour {
 		if (acc > 0) {
 			accelerationVector = direction * acc * maxAcc; //Forward acceleration for a mass of 1 unit
 		} else {
-			accelerationVector = Vector2.zero; //TODO: Braking
+			accelerationVector = direction * acc * maxAcc * 0.5f; //TODO: Braking
 		}
 
 		//Realistic turn formula for a wheel separation of 3m (0.34 ~= 1 / 3)

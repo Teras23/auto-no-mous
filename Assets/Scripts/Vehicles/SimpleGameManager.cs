@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using UnityEditorInternal;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class SimpleGameManager : MonoBehaviour
 {
     [SerializeField]
-    public CarMovement carPrefab;
+    public GameObject carPrefab;
 
     [SerializeField]
     public int nrOfCars = 10;
@@ -16,24 +17,19 @@ public class SimpleGameManager : MonoBehaviour
 
     public static float maxRayLength = 10;
 
-    private CarMovement[] _cars;
+    private GameObject[] _cars;
 
     // Start is called before the first frame update
     void Start()
     {
         Physics2D.IgnoreLayerCollision(Physics.IgnoreRaycastLayer, Physics.IgnoreRaycastLayer);
 
-        _cars = new CarMovement[nrOfCars];
+        _cars = new GameObject[nrOfCars];
         for (var i = 0; i < nrOfCars; i++)
         {
             var car = Instantiate(carPrefab);
-            car.Id = i;
+            car.GetComponent<CombinedCarController>().AI = true;
             _cars[i] = car;
-        }
-
-        if (includeManual)
-        {
-            _cars[0].isManual = true;
         }
     }
 
