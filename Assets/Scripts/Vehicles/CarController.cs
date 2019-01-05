@@ -4,16 +4,34 @@ public class CarController : MonoBehaviour {
 	public float maxAcc, maxTurn, wheelFriction;
 	Rigidbody2D rb;
 	public bool AI;
+	//Score variables
+	public int points = 0;
+	float startTime, lastTime;
+	public float TotalTime => lastTime - startTime;
 
 	void Start() {
 		rb = GetComponent<Rigidbody2D>();
 		maxTurn *= Mathf.Deg2Rad;
 		wheelFriction *= 10;
+		startTime = Time.time;
+	}
+
+	void OnTriggerEnter2D(Collider2D collision) {
+		int n = collision.GetComponent<Checkpoint>().order;
+		if (n == points + 1) {
+			points = n;
+			lastTime = Time.time;
+		}
 	}
 
 	void FixedUpdate() {
 		if (AI) {
 			ControlVehicle(0, 0); //TODO: Hook up to NN
+
+			//End car if it has not gone through any checkpoint for 3 seconds
+			if (Time.time > lastTime + 3) {
+				//End car somehow
+			}
 		} else {
 			ControlVehicle(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
 		}
@@ -62,5 +80,4 @@ public class CarController : MonoBehaviour {
 
 		rb.AddForce(accelerationVector);
 	}
-
 }

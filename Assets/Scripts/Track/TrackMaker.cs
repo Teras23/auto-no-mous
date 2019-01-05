@@ -10,7 +10,7 @@ public class TrackMaker : MonoBehaviour {
 	Stack<TrackSegment> pieceHistory = new Stack<TrackSegment>();
 	float x, y, ax = 10, bx, cx = -10, ay, by, cy;
 	Camera cam;
-	int checkpointCounter = 0;
+	int checkpointCounter = 1;
 	bool inBuildMode = false;
 
 	void Awake() {
