@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 
 public class CarController : MonoBehaviour {
-	public float maxAcc, maxTurn, sideFriction;
+	public float maxAcc, maxTurn, wheelFriction;
 	Rigidbody2D rb;
 	public bool AI;
 
 	void Start() {
 		rb = GetComponent<Rigidbody2D>();
 		maxTurn *= Mathf.Deg2Rad;
+		wheelFriction *= 10;
 	}
 
 	void FixedUpdate() {
@@ -22,12 +23,19 @@ public class CarController : MonoBehaviour {
 		Vector2 accelerationVector;
 		Vector2 direction = rb.GetRelativeVector(Vector2.right);
 		Vector2 sideDirection = rb.GetRelativeVector(Vector2.down);
-		float currentSpeed = rb.velocity.magnitude;
+		float forwardSpeed = Vector2.Dot(rb.velocity, direction);
+		float sideSpeed = Vector2.Dot(rb.velocity, sideDirection);
 
 		if (acc > 0) {
 			accelerationVector = direction * acc * maxAcc; //Forward acceleration for a mass of 1 unit
 		} else {
-			accelerationVector = Vector2.zero; //TODO: Braking
+			if (forwardSpeed > -0.3f * acc) { //Regular braking
+				accelerationVector = direction * wheelFriction * acc;
+			} else { //Come to a halt if speed is low enough
+				accelerationVector = Vector2.zero;
+				rb.velocity = sideSpeed * sideDirection;
+				forwardSpeed = 0;
+			}
 		}
 
 		//Realistic turn formula for a wheel separation of 3m (0.34 ~= 1 / 3)
@@ -35,15 +43,22 @@ public class CarController : MonoBehaviour {
 		float realTurn = turn * maxTurn;
 		rb.rotation -= Vector2.Dot(rb.velocity, direction) * (Mathf.Tan(realTurn) + Mathf.Sin(realTurn)) * 0.17f * Mathf.Rad2Deg * Time.fixedDeltaTime;
 
-		//Air resistance for an air density of 1.2kg/m^3, frontal area of 2m^2, mass of 2 tons, and a drag coefficient of 0.25
-		//(0.25 * 1.2 * v^2 * 2) / (2 * 2000) = 0.00015v^2
-		accelerationVector -= 0.00015f * currentSpeed * currentSpeed * rb.velocity;
+		//Air resistance for an air density of 1.2kg/m^3, frontal area of 2m^2, mass of 2 tons, and a drag coefficient of 0.3
+		//(0.3 * 1.2 * v^2 * 2) / (2 * 2000) = 0.00018v^2
+		accelerationVector -= 0.00018f * rb.velocity.magnitude * rb.velocity;
 
 		//Anti-drift friction
-		float antiDriftAcceleration = Vector2.Dot(rb.velocity, sideDirection) * sideFriction;
+		float antiDriftAcceleration;
+		if (sideSpeed > 0.3f) { //Sliding to the right
+			antiDriftAcceleration = wheelFriction;
+		} else if (sideSpeed < -0.3f) { //Sliding to the left
+			antiDriftAcceleration = -wheelFriction;
+		} else { //Come to a halt if speed is low enough
+			antiDriftAcceleration = 0;
+			rb.velocity = forwardSpeed * direction;
+			sideSpeed = 0;
+		}
 		accelerationVector -= antiDriftAcceleration * sideDirection;
-		//Add a fraction of that to forward speed
-		accelerationVector += 0.5f * Mathf.Abs(antiDriftAcceleration) * direction;
 
 		rb.AddForce(accelerationVector);
 	}

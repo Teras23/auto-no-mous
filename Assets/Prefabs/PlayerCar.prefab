@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7707378796918465522}
   - component: {fileID: 4999368821893407011}
   - component: {fileID: 1317395573}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PlayerCar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -93,9 +93,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee131d94397821d4daf13b776f589705, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxAcc: 9
+  maxAcc: 6
   maxTurn: 30
-  sideFriction: 1
+  wheelFriction: 1.35
   AI: 0
 --- !u!1001 &2350816269531917068
 PrefabInstance:
