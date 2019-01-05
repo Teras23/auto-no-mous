@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 public class CarController : MonoBehaviour {
 	public float maxAcc, maxTurn, wheelFriction;
@@ -7,14 +8,28 @@ public class CarController : MonoBehaviour {
 	//Score variables
 	public int points = 0;
 	float startTime, lastTime;
-	public float TotalTime => lastTime - startTime;
 
-	void Start() {
+    public float[] debugSensorValues;
+
+    public float TotalTime => lastTime - startTime;
+    public CarSensor.SensorData[] SensorData => _sensors == null 
+        ? new CarSensor.SensorData[0] 
+        : _sensors.Select(x => x.Data).ToArray();
+
+    public int Id { get; set; }
+
+    private CarSensor[] _sensors;
+    private NeuralNetwork _neuralNetwork;
+
+    void Start() {
 		rb = GetComponent<Rigidbody2D>();
 		maxTurn *= Mathf.Deg2Rad;
 		wheelFriction *= 10;
 		startTime = Time.time;
-	}
+
+        _sensors = GetComponentsInChildren<CarSensor>();
+        _neuralNetwork = GetComponent<NeuralNetwork>();
+    }
 
 	void OnTriggerEnter2D(Collider2D collision) {
 		int n = collision.GetComponent<Checkpoint>().order;
@@ -25,11 +40,14 @@ public class CarController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		if (AI) {
-			ControlVehicle(0, 0); //TODO: Hook up to NN
+        debugSensorValues = SensorData.Select(x => x.Distance).ToArray();
 
-			//End car if it has not gone through any checkpoint for 3 seconds
-			if (Time.time > lastTime + 3) {
+        if (AI) {
+            var results = _neuralNetwork.calculate(SensorData.Select(x => (double)x.Distance).ToArray());
+            ControlVehicle((float)results[0], (float)results[1] * 2.0f - 1.0f); //TODO: Hook up to NN
+
+            //End car if it has not gone through any checkpoint for 3 seconds
+            if (Time.time > lastTime + 3) {
 				//End car somehow
 			}
 		} else {
