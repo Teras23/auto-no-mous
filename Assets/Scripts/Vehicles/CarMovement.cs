@@ -27,6 +27,8 @@ public class CarMovement : MonoBehaviour
     public CarSensor.SensorData[] SensorData =>
         _sensors == null ? new CarSensor.SensorData[0] : _sensors.Select(x => x.Data).ToArray();
 
+    public int Id { get; set; }
+
     void Start()
     {
         _rigidBody = GetComponent<Rigidbody2D>();
@@ -42,6 +44,15 @@ public class CarMovement : MonoBehaviour
         {
             Turn(Input.GetAxis("Horizontal"));
             Gas(Input.GetAxis("Vertical"));
+        }
+        else
+        {
+            // TODO: use AI based on sensor output
+            var randomGas = Random.Range(-1f, 1f);
+            var randomTurn = Random.Range(-1f, 1f);
+
+            Gas(randomGas);
+            Turn(randomTurn);
         }
     }
 

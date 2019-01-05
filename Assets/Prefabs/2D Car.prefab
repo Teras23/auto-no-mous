@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 8529709493353340438}
   - component: {fileID: 8529709493353340439}
   m_Layer: 2
-  m_Name: Wannabe Car
+  m_Name: 2D Car
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -149,7 +149,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cd2444a0cc3e96449893be122675ed79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isManual: 1
+  isManual: 0
   drag: 2
   angularDrag: 1.1
   speedMultiplier: 20

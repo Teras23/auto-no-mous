@@ -18,6 +18,11 @@ public class CarSensor : MonoBehaviour
         public Vector3 Direction { get; set; }
 
         /// <summary>
+        /// The direction this sensor is facing relatively to the car
+        /// </summary>
+        public Vector3 LocalDirection { get; set; }
+
+        /// <summary>
         /// The color of the sensor's ray visualization (debug)
         /// </summary>
         public Color RayColor { get; set; }
@@ -27,12 +32,13 @@ public class CarSensor : MonoBehaviour
     {
         Distance = _sensorOutput,
         Direction = CurrentDirection,
+        LocalDirection = _localDirection,
         RayColor = rayColor
     };
 
     private float _sensorOutput;
-    private float maxRayLength = 10;
     private Rigidbody2D _carRb;
+    private Vector3 _localDirection;
 
     [SerializeField]
     public Color rayColor = Color.red;
@@ -42,13 +48,14 @@ public class CarSensor : MonoBehaviour
     void Start()
     {
         _carRb = GetComponentInParent<Rigidbody2D>();
+        _localDirection = CurrentDirection;
     }
 
     void FixedUpdate()
     {
-        Debug.DrawRay(transform.position, CurrentDirection.normalized * maxRayLength, rayColor, 0);
+        Debug.DrawRay(transform.position, CurrentDirection.normalized * SimpleGameManager.maxRayLength, rayColor, 0);
 
-        var hit = Physics2D.Raycast(transform.position, CurrentDirection, maxRayLength);
+        var hit = Physics2D.Raycast(transform.position, CurrentDirection, SimpleGameManager.maxRayLength);
         _sensorOutput = hit ? hit.distance : float.MaxValue;
     }
 }
