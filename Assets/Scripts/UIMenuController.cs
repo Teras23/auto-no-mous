@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIMenuController : MonoBehaviour
@@ -8,14 +9,20 @@ public class UIMenuController : MonoBehaviour
 
     public Button playButton;
     public Button editButton;
+    public Toggle participation;
+    public Slider timeSpeed;
+
+    private List<Selectable> _toDisableInGame = new List<Selectable>();
 
 
-    private bool _isHidden;
+    private bool _isActive;
 
     void Start()
     {
         playButton.onClick.AddListener(EnterPlayMode);
         editButton.onClick.AddListener(EnterBuildMode);
+
+        _toDisableInGame.Add(participation);
     }
 
     void Update()
@@ -24,21 +31,21 @@ public class UIMenuController : MonoBehaviour
 
         if (Input.GetButtonDown("EnterBuildMode"))
         {
-            if (!_isHidden)
+            if (!_isActive)
             {
                 EnterBuildMode();
             }
             else
             {
                 // Based on current logic in TrackMaker
-                EnableAndShow();
+                EnableConfiguration();
             }
         }
     }
 
     private void EnterBuildMode()
     {
-        DisableAndHide();
+        DisableConfiguration();
 
         // TODO: gib public "edit" method pls
         //trackMaker.EnterBuildMode()
@@ -46,41 +53,36 @@ public class UIMenuController : MonoBehaviour
 
     private void EnterPlayMode()
     {
-        DisableAndHide();
+        DisableConfiguration();
 
         // TODO: gib public "play" method pls
         //gameManager.EnterPlayMode()
     }
 
-    public void DisableAndHide()
+    public void DisableConfiguration()
     {
-        _isHidden = true;
+        _isActive = false;
 
-        foreach (var button in GetComponentsInChildren<Button>())
+        foreach (var input in _toDisableInGame)
         {
-            button.enabled = false;
+            input.enabled = false;
         }
 
-        var canvasGroup = GetComponent<CanvasGroup>();
-        canvasGroup.blocksRaycasts = false;
-        canvasGroup.interactable = false;
-        canvasGroup.alpha = 0;
+        // canvasGroup.alpha = 0.8f;
     }
 
 
     // TODO: call from some sort of "back" or "restart" action
-    public void EnableAndShow()
+    public void EnableConfiguration()
     {
-        _isHidden = false;
+        _isActive = true;
 
-        foreach (var button in GetComponentsInChildren<Button>())
+        foreach (var input in _toDisableInGame)
         {
-            button.enabled = true;
+            input.enabled = true;
         }
 
         var canvasGroup = GetComponent<CanvasGroup>();
-        canvasGroup.blocksRaycasts = true;
-        canvasGroup.interactable = true;
         canvasGroup.alpha = 1;
     }
 }
