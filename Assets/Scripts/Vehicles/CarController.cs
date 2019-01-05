@@ -30,7 +30,7 @@ public class CarController : MonoBehaviour {
 
 			//End car if it has not gone through any checkpoint for 3 seconds
 			if (Time.time > lastTime + 3) {
-				//End car somehow
+				enabled = false;
 			}
 		} else {
 			ControlVehicle(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
