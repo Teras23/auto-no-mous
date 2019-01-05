@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
+using Random = System.Random;
 
 public class NeuralNetwork : MonoBehaviour
 {
@@ -87,7 +88,9 @@ public class NeuralNetwork : MonoBehaviour
         return layer.AsArray();
     }
 
-    private const double MutationChance = 0.4;
+    private const double MutationChance = 0.2;
+    private const double MutationChanceBias = 0.2;
+
     
     public static Tuple<List<Matrix<double>>, List<Vector<double>>> merge(NeuralNetwork network1,
         NeuralNetwork network2)
@@ -95,15 +98,46 @@ public class NeuralNetwork : MonoBehaviour
         List<Matrix<double>> newWeights = new List<Matrix<double>>(network1.weights.Count);
         List<Vector<double>> newBiases = new List<Vector<double>>(network1.biases.Count);
         
+        Random random = new Random();
+
+        
         for (var i = 0; i < newWeights.Count; i++)
         {
-            
-            network1.weights[i].CopyTo(newWeights[i]);   
+            var choice = random.NextDouble();
+
+            if (choice < (1 - MutationChance) / 2)
+            {
+                network1.weights[i].CopyTo(newWeights[i]);                   
+            }
+            else if (choice < 1 - MutationChance)
+            {
+                network2.weights[i].CopyTo(newWeights[i]);
+            }
+            else
+            {
+                newWeights[i] =
+                    Matrix<double>.Build.Random(network1.weights[i].RowCount, network1.weights[i].ColumnCount);
+            }
         }
         
         for (var i = 0; i < newBiases.Count; i++)
         {
-            network1.biases[i].CopyTo(newBiases[i]);   
+            var choice = random.NextDouble();
+
+            if (choice < (1 - MutationChanceBias) / 2)
+            {
+                network1.biases[i].CopyTo(newBiases[i]);   
+            }
+            else if (choice < 1 - MutationChanceBias)
+            {
+                network2.biases[i].CopyTo(newBiases[i]);   
+            }
+            else
+            {
+                newBiases[i] =
+                    Vector<double>.Build.Random(network1.biases[i].Count);
+            }
+            
         }
         
         return new Tuple<List<Matrix<double>>, List<Vector<double>>>(newWeights, newBiases);
