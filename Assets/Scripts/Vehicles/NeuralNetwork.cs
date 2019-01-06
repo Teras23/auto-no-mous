@@ -105,12 +105,12 @@ public class NeuralNetwork : MonoBehaviour
         return new Tuple<List<Matrix<double>>, List<Vector<double>>>(weights, biases); 
     }
     
-    private const double MutationChance = 0.2;
-    private const double MutationChanceBias = 0.2;
+    private const double MutationChance = 0.05;
+    private const double MutationChanceBias = 0.05;
 
-    public static Tuple<List<Matrix<double>>, List<Vector<double>>> CrossOver(GameObject go1, GameObject go2)
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> Crossover(GameObject go1, GameObject go2)
     {
-        return CrossOver(go1.GetComponent<NeuralNetwork>(), go2.GetComponent<NeuralNetwork>());
+        return Crossover(go1.GetComponent<NeuralNetwork>(), go2.GetComponent<NeuralNetwork>());
     }
     
     public static Tuple<List<Matrix<double>>, List<Vector<double>>> Mutate(GameObject go)
@@ -163,7 +163,7 @@ public class NeuralNetwork : MonoBehaviour
         return new Tuple<List<Matrix<double>>, List<Vector<double>>>(newWeights, newBiases);
     }
     
-    public static Tuple<List<Matrix<double>>, List<Vector<double>>> CrossOver(NeuralNetwork network1,
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> Crossover(NeuralNetwork network1,
         NeuralNetwork network2)
     {
         List<Matrix<double>> newWeights = new List<Matrix<double>>();

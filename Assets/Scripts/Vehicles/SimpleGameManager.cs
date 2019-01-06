@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Random = System.Random;
 
 public class SimpleGameManager : MonoBehaviour {
 	private GameObject[] _cars;
@@ -41,7 +43,6 @@ public class SimpleGameManager : MonoBehaviour {
 
 		if (started && allFinished) {
 			SpawnNewCars();
-			Debug.Log("All finished");
 		}
 	}
 
@@ -93,29 +94,65 @@ public class SimpleGameManager : MonoBehaviour {
 		started = true;
 	}
 
-	private const float Mutate = 0.2f;
-	private const float Merge = 0.6f;
+	private const float Mutate = 0.3f;
+	private const float Crossover = 0.4f;
 
+	private GameObject SelectBiasBest(List<GameObject> cars, int pointsTotal)
+	{
+		var random = new Random();
+		var randomPoints = random.Next(pointsTotal);
+
+		var totalIterator = 0;
+		
+		foreach (var car in cars)
+		{
+			totalIterator += car.GetComponent<CarController>().points;			
+			
+			if (totalIterator < randomPoints)
+			{
+				return car;
+			}
+		}
+		
+		return cars.Last();
+	}
+	
 	private void SpawnNewCars() {
 		var lastCars = _cars.OrderByDescending(go => go.GetComponent<CarController>().points)
 			.ThenBy(go => go.GetComponent<CarController>().TotalTime).ToList();
 		ClearCars();
 		SpawnCars();
 
-		// Mutate some cars
+		var pointsTotal = 0;
+
+		foreach (var car in lastCars)
+		{
+			pointsTotal += car.GetComponent<CarController>().points;
+		}
+		
+		// Mutate best cars
 		for (var i = 0; i < (int) (nrOfCars * Mutate); i++) {
-			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.Mutate(lastCars[i]));
+			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(
+				NeuralNetwork.Mutate(SelectBiasBest(lastCars, pointsTotal)));
+			_cars[i].name = "AICar (Mutated)";
+			_cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.green;
 		}
 
-		// Crossover some other cars
-		for (var i = (int) (nrOfCars * Mutate); i < (int) (nrOfCars * Merge); i++) {
-			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.CrossOver(lastCars[0], lastCars[1]));
+		// Crossover best cars
+		for (var i = (int) (nrOfCars * Mutate); i < (int) (nrOfCars * (Mutate + Crossover)); i++) {
+			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(
+				NeuralNetwork.Crossover(SelectBiasBest(lastCars, pointsTotal), SelectBiasBest(lastCars, pointsTotal)));
+			_cars[i].name = "AICar (Crossed)";
+			_cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
 		}
 
 		// Crossover and mutate the rest of the cars
-		for (var i = (int) (nrOfCars * Merge); i < _cars.Length; i++) {
-			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.CrossOver(lastCars[0], lastCars[1]));
+		for (var i = (int) (nrOfCars * (Mutate + Crossover)); i < _cars.Length; i++) {
+			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(
+				NeuralNetwork.Crossover(SelectBiasBest(lastCars, pointsTotal), SelectBiasBest(lastCars, pointsTotal)));
 			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.Mutate(_cars[i]));
+			_cars[i].name = "AICar (Mutated and crossed)";
+			_cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.red;
 		}
 
 		generation++;

@@ -35,6 +35,11 @@ public class CarController : MonoBehaviour {
 		}
 	}
 
+	private void OnCollisionEnter2D(Collision2D other)
+	{
+		gameObject.SetActive(false);
+	}
+
 	void FixedUpdate() {
 		if (AI) {
 			double[] results = neuralNetwork.Calculate(System.Array.ConvertAll<Vector2, double>(sensorDirections, direction => {
