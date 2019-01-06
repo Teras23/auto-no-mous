@@ -22,7 +22,7 @@ public class UIController : MonoBehaviour {
 	void Start() {
 		_toDisableInBuildMode.AddRange(new Selectable[]
 		{
-			playButton, levelButton, editButton, participation, timeSpeed
+			playButton, editButton, participation, timeSpeed
 		});
 	}
 
