@@ -61,8 +61,6 @@ public class UIController : MonoBehaviour {
 		}
 
 		menu.gameObject.SetActive(false);
-
-		//buildShortcuts.alpha = 1;
 	}
 
 	private void HideUI() {
@@ -71,7 +69,5 @@ public class UIController : MonoBehaviour {
 		}
 
 		menu.gameObject.SetActive(true);
-
-		//buildShortcuts.alpha = 0;
 	}
 }

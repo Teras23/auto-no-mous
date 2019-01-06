@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TrackMaker : MonoBehaviour {
 	public TrackSegment segment;
@@ -10,6 +11,7 @@ public class TrackMaker : MonoBehaviour {
 	Stack<TrackSegment> pieceHistory = new Stack<TrackSegment>();
 	float x, y, ax = 10, bx, cx = -10, ay, by, cy;
 	Camera cam;
+	EventSystem eventSystem;
 	int checkpointCounter = 1;
 	//This is a hack solution, but it's so much better to do this stuff in the editor
 	[System.Serializable]
@@ -24,6 +26,7 @@ public class TrackMaker : MonoBehaviour {
 
 	void Awake() {
 		cam = Camera.main;
+		eventSystem = EventSystem.current;
 	}
 
 	public void EnterBuildMode() {
@@ -38,7 +41,7 @@ public class TrackMaker : MonoBehaviour {
 
 	IEnumerator BuildMode() {
 		while (true) {
-			if (!Input.GetButtonDown("Fire1")) {
+			if (!Input.GetButtonDown("Fire1") && !eventSystem.IsPointerOverGameObject()) {
 				Remove();
 			} else { //TODO: Temporary
 				Ray forward = cam.ScreenPointToRay(Input.mousePosition);
@@ -46,7 +49,7 @@ public class TrackMaker : MonoBehaviour {
 				Vector3 mouseLoc = forward.origin + forward.direction * distance;
 				Debug.Log(mouseLoc); //TODO: Create pre-built tracks from these locations
 			}
-			if (!Input.GetButtonDown("Cancel")) {
+			if (!Input.GetButtonDown("Cancel") && !eventSystem.IsPointerOverGameObject()) {
 				MousePlace();
 			}
 			yield return null;
