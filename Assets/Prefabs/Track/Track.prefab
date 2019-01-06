@@ -51,7 +51,12 @@ MonoBehaviour:
   wallWidth: 0.5
   checkpointWidth: 0.05
   segmentCount: 12
-  tracks: []
+  tracks:
+  - points:
+    - {x: 70, y: 0}
+    - {x: 130, y: -45}
+    - {x: 87.5, y: -88.5}
+    - {x: 25, y: -88.5}
 --- !u!1 &2752467276780496419
 GameObject:
   m_ObjectHideFlags: 0

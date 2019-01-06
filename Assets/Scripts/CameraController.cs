@@ -7,14 +7,17 @@ public class CameraController : MonoBehaviour {
 		Follow
 	}
 
-	CameraMode cameraMode = CameraMode.Flat;
+    public float speed, rotSpeed;
+    public Vector3 startPosition = new Vector3(60, -45, -100);
+
+    CameraMode cameraMode = CameraMode.Flat;
 	CameraMode oldCameraMode = CameraMode.Flat;
-	public float speed, rotSpeed;
 	GameObject player;
 
 	void Start() {
 		player = GameObject.FindGameObjectWithTag("Player");
-	}
+        transform.localPosition = startPosition;
+    }
 
 	void Update() {
 		switch (cameraMode) {
@@ -62,7 +65,7 @@ public class CameraController : MonoBehaviour {
 		switch (cameraMode) {
 			case CameraMode.Flat:
 				transform.parent = null;
-				transform.localPosition = new Vector3(0, 0, -100);
+				transform.localPosition = startPosition;
 				transform.localRotation = Quaternion.identity;
 				break;
 			case CameraMode.Follow:
