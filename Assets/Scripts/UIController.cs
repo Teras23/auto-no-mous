@@ -1,39 +1,25 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
-	private readonly List<Selectable> _toDisableInBuildMode = new List<Selectable>();
-
 	public Slider timeSpeed;
 	public Button playButton;
 	public Toggle participation;
 	public InputField levelField;
 	public Button editButton;
     public Text generationText;
+	public Text collapseButtonText;
 
 	public TrackMaker trackMaker;
 	bool inBuildMode = false;
-	public SimpleGameManager gameManager;
+	bool menuVisible = true;
+	public GameManager gameManager;
 
 	public RectTransform menu;
-	public RectTransform buildShortcuts;
-	public RectTransform playButtonGroup;
 
-	void Start() {
-		_toDisableInBuildMode.AddRange(new Selectable[]
-		{
-			playButton, editButton, participation, timeSpeed
-		});
+	public void UpdateInfoPanel() {
+		generationText.text = $"Generation: {gameManager.Generation}";
 	}
-
-	void Update() {
-		if (Input.GetButtonDown("Play")) {
-			TogglePlayMode();
-		}
-
-        generationText.text = $"Generation: {gameManager.generation}";
-    }
 
 	public void TogglePlayMode() {
 		if (!inBuildMode) {
@@ -46,13 +32,12 @@ public class UIController : MonoBehaviour {
 	}
 
 	private void EnterPlayMode() {
-		// ShowPlayModeInputs()
 		playButton.GetComponentInChildren<Text>().text = "Stop";
 		gameManager.EnterPlayMode(participation.isOn);
 	}
 
 	private void LeavePlayMode() {
-		playButton.GetComponentInChildren<Text>().text = "Race";
+		playButton.GetComponentInChildren<Text>().text = "Start training";
 		gameManager.LeavePlayMode();
 	}
 
@@ -63,27 +48,24 @@ public class UIController : MonoBehaviour {
 	public void ToggleBuildMode() {
 		inBuildMode = !inBuildMode;
 		if (inBuildMode) {
-            editButton.GetComponentInChildren<Text>().text = "Save changes";
+            editButton.GetComponentInChildren<Text>().text = "Save & exit build";
             trackMaker.EnterBuildMode();
 		} else {
-            editButton.GetComponentInChildren<Text>().text = "Custom track";
+            editButton.GetComponentInChildren<Text>().text = "Enter build mode";
             trackMaker.LeaveBuildMode();
 		}
 	}
 
-	private void DisplayUI() {
-		foreach (var input in _toDisableInBuildMode) {
-			input.enabled = false;
+	public void ToggleUI() {
+		menuVisible = !menuVisible;
+		if (menuVisible) {
+			collapseButtonText.text = "<";
+			menu.anchoredPosition = Vector2.zero;
+			//menu.localPosition = Vector3.zero;
+		} else {
+			collapseButtonText.text = ">";
+			menu.anchoredPosition = new Vector2(-360, 0);
+			//menu.localPosition = new Vector3(-360, 0);
 		}
-
-		menu.gameObject.SetActive(false);
-	}
-
-	private void HideUI() {
-		foreach (var input in _toDisableInBuildMode) {
-			input.enabled = true;
-		}
-
-		menu.gameObject.SetActive(true);
 	}
 }

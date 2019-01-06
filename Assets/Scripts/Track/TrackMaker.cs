@@ -43,7 +43,9 @@ public class TrackMaker : MonoBehaviour {
 		while (true) {
 			if (!Input.GetButtonDown("Fire1") && !eventSystem.IsPointerOverGameObject()) {
 				Remove();
-			} else { //TODO: Temporary
+			}
+			//TODO: Temporary
+			if (Input.GetButtonDown("Fire1")) {
 				Ray forward = cam.ScreenPointToRay(Input.mousePosition);
 				new Plane(Vector3.back, Vector3.zero).Raycast(forward, out float distance);
 				Vector3 mouseLoc = forward.origin + forward.direction * distance;

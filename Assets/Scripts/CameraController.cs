@@ -1,6 +1,13 @@
 ﻿using UnityEngine;
 
 public class CameraController : MonoBehaviour {
+	public float speed;
+
+	void Update() {
+		transform.Translate(new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("UpDown")) * (Time.unscaledDeltaTime * speed));
+	}
+
+	/*
 	enum CameraMode {
 		Disabled,
 		Flat,
@@ -8,7 +15,7 @@ public class CameraController : MonoBehaviour {
 	}
 
     public float speed, rotSpeed;
-    public Vector3 startPosition = new Vector3(60, -45, -100);
+	Vector3 startPosition;
 
     CameraMode cameraMode = CameraMode.Flat;
 	CameraMode oldCameraMode = CameraMode.Flat;
@@ -16,7 +23,7 @@ public class CameraController : MonoBehaviour {
 
 	void Start() {
 		player = GameObject.FindGameObjectWithTag("Player");
-        transform.localPosition = startPosition;
+        startPosition = transform.localPosition;
     }
 
 	void Update() {
@@ -26,18 +33,15 @@ public class CameraController : MonoBehaviour {
 				break;
 			case CameraMode.Follow:
 				//TODO: Follow best car
-				/*
-				if (player == null && transform.parent != currentLead) {
-					transform.SetParent(currentLead, false);
-				}
-				*/
+				//if (player == null && transform.parent != currentLead) {
+				//	transform.SetParent(currentLead, false);
+				//}
 				transform.Translate(new Vector3(0, 0, Input.GetAxisRaw("Vertical")) * (Time.unscaledDeltaTime * speed * 0.1f));
 				float rotAmount = Time.unscaledDeltaTime * rotSpeed * 60;
 				transform.RotateAround(transform.parent.position, transform.TransformDirection(Vector3.right), Input.GetAxisRaw("UpDown") * rotAmount);
 				transform.RotateAround(transform.parent.position, Vector3.back, Input.GetAxisRaw("Horizontal") * rotAmount);
 				break;
 		}
-
 		if (Input.GetButtonDown("ChangeCamera")) {
 			switch (cameraMode) {
 				case CameraMode.Flat:
@@ -78,4 +82,5 @@ public class CameraController : MonoBehaviour {
 				break;
 		}
 	}
+	*/
 }

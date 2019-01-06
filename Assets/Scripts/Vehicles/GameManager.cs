@@ -3,37 +3,41 @@ using System.Linq;
 using UnityEngine;
 using Random = System.Random;
 
-public class SimpleGameManager : MonoBehaviour {
+public class GameManager : MonoBehaviour {
 	private GameObject[] _cars;
 	private GameObject _playerCar;
 	private bool started = false;
-	public int generation = 1;
+	private int generation = 1;
+	public int Generation {
+		get {
+			return generation;
+		} set {
+			generation = value;
+			UIController.UpdateInfoPanel();
+		}
+	}
 
 	public GameObject _aiCarPrefab;
 	public GameObject _playerCarPrefab;
 	public int nrOfCars;
 	public TrackMaker _trackMaker;
+	public UIController UIController;
 
 	Random rng;
 
-	/// <summary>
-	/// Used by UI controller
-	/// </summary>
 	public bool InGame { get; private set; }
 
-	// Start is called before the first frame update
 	void Start() {
 		_cars = new GameObject[nrOfCars];
 		rng = new Random();
 	}
 
-	// Update is called once per frame
 	void Update() {
 		var allFinished = true;
 
 		foreach (var car in _cars) {
 			if (car != null && car.activeSelf) {
-				allFinished = false;
+				return;
 			}
 		}
 
@@ -42,10 +46,6 @@ public class SimpleGameManager : MonoBehaviour {
 		}
 	}
 
-
-	/// <summary>
-	/// Used by UI controller
-	/// </summary>
 	public void EnterPlayMode(bool includePlayer = false) {
 		InGame = true;
 
@@ -57,10 +57,6 @@ public class SimpleGameManager : MonoBehaviour {
 		SpawnCars();
 	}
 
-
-	/// <summary>
-	/// Used by UI controller
-	/// </summary>
 	public void LeavePlayMode() {
 		InGame = false;
 		started = false;
@@ -174,6 +170,6 @@ public class SimpleGameManager : MonoBehaviour {
 		_cars[_cars.Length - 1].name = "AICar (Best car) " + lastCars[0].GetComponent<CarController>().points;
 		_cars[_cars.Length - 1].GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
 		
-		generation++;
+		Generation++;
 	}
 }
