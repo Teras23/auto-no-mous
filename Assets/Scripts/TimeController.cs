@@ -7,7 +7,7 @@ public class TimeController : MonoBehaviour {
 
 	public void UpdateTime() {
 		float speed = slider.value * slider.value;
-		text.text = "Time Speed\n" + System.Math.Round(speed, 2) + "x";
+		text.text = System.Math.Round(speed, 2) + "x";
 		Time.timeScale = speed;
 	}
 }
