@@ -96,7 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxAcc: 6
   maxTurn: 30
-  wheelFriction: 1.35
+  wheelFriction: 1.71
   AI: 1
   points: 0
   sensorAngles:
@@ -118,7 +118,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hiddenLayers: 0800000008000000
-  inputSize: 5
+  inputSize: 7
   outputSize: 2
 --- !u!1001 &2350816269531917068
 PrefabInstance:

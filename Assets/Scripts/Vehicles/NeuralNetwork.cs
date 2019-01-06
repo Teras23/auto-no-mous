@@ -138,7 +138,11 @@ public class NeuralNetwork : MonoBehaviour
                     if (choice > MutationChance)
                     {
                         newWeight[r, c] = network1.weights[i][r, c];
-                    }               
+                    }
+                    else
+                    {
+                        newWeight[r, c] *= (random.NextDouble() * 2) * (random.Next(2) * 2 - 1);
+                    }
                 }
             }
             newWeights.Add(newWeight);
@@ -155,7 +159,11 @@ public class NeuralNetwork : MonoBehaviour
                 if (choice > MutationChanceBias)
                 {
                     newBias[c] = network1.biases[i][c];
-                } 
+                }
+                else
+                {
+                    newBias[c] *= (random.NextDouble() * 2) * (random.Next(2) * 2 - 1);
+                }
             }
             newBiases.Add(newBias);
         }
