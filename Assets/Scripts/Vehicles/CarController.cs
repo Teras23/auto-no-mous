@@ -46,9 +46,10 @@ public class CarController : MonoBehaviour {
 			List<double> inputs = new List<double>(System.Array.ConvertAll<Vector2, double>(sensorDirections, direction => {
 				RaycastHit2D hit = Physics2D.Raycast(rb.position, rb.GetRelativeVector(direction), float.PositiveInfinity, LayerMask.GetMask("Wall"));
 				return hit ? hit.distance : float.MaxValue;
-			}));
-			inputs.Add(Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.right)));
-			inputs.Add(Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.down)));
+			})) {
+				Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.right)),
+				Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.down))
+			};
 			double[] results = neuralNetwork.Calculate(inputs.ToArray());
 			ControlVehicle((float) results[0], (float) results[1]);
 
