@@ -11,6 +11,8 @@ public class NeuralNetwork : MonoBehaviour
     public List<int> hiddenLayers;
     public int inputSize;
     public int outputSize;
+
+	static Random rng;
     
     private static double SoftplusRelu(double x)
     {
@@ -29,7 +31,8 @@ public class NeuralNetwork : MonoBehaviour
     
     void Start()
     {
-        if (!_initiated)
+		rng = new Random();
+		if (!_initiated)
         {
             weights = new List<Matrix<double>>(hiddenLayers.Count);
             biases = new List<Vector<double>>(hiddenLayers.Count);
@@ -122,8 +125,6 @@ public class NeuralNetwork : MonoBehaviour
     {
         List<Matrix<double>> newWeights = new List<Matrix<double>>();
         List<Vector<double>> newBiases = new List<Vector<double>>();
-        
-        Random random = new Random();
 
         for (var i = 0; i < network1.weights.Count; i++)
         {
@@ -133,7 +134,7 @@ public class NeuralNetwork : MonoBehaviour
             {
                 for (var c = 0; c < newWeight.ColumnCount; c++)
                 {
-                    var choice = random.NextDouble();
+                    var choice = rng.NextDouble();
                     
                     if (choice > MutationChance)
                     {
@@ -141,7 +142,7 @@ public class NeuralNetwork : MonoBehaviour
                     }
                     else
                     {
-                        newWeight[r, c] *= (random.NextDouble() * 2) * (random.Next(2) * 2 - 1);
+                        newWeight[r, c] *= (rng.NextDouble() * 2) * (rng.Next(2) * 2 - 1);
                     }
                 }
             }
@@ -154,7 +155,7 @@ public class NeuralNetwork : MonoBehaviour
 
             for (var c = 0; c < newBias.Count; c++)
             {
-                var choice = random.NextDouble();
+                var choice = rng.NextDouble();
                     
                 if (choice > MutationChanceBias)
                 {
@@ -162,7 +163,7 @@ public class NeuralNetwork : MonoBehaviour
                 }
                 else
                 {
-                    newBias[c] *= (random.NextDouble() * 2) * (random.Next(2) * 2 - 1);
+                    newBias[c] *= (rng.NextDouble() * 2) * (rng.Next(2) * 2 - 1);
                 }
             }
             newBiases.Add(newBias);
@@ -176,8 +177,6 @@ public class NeuralNetwork : MonoBehaviour
     {
         List<Matrix<double>> newWeights = new List<Matrix<double>>();
         List<Vector<double>> newBiases = new List<Vector<double>>();
-        
-        Random random = new Random();
 
         for (var i = 0; i < network1.weights.Count; i++)
         {
@@ -187,7 +186,7 @@ public class NeuralNetwork : MonoBehaviour
             {
                 for (var c = 0; c < newWeight.ColumnCount; c++)
                 {
-                    var choice = random.NextDouble();
+                    var choice = rng.NextDouble();
                     
                     if (choice <  0.5)
                     {
@@ -208,7 +207,7 @@ public class NeuralNetwork : MonoBehaviour
 
             for (var c = 0; c < newBias.Count; c++)
             {
-                var choice = random.NextDouble();
+                var choice = rng.NextDouble();
                     
                 if (choice < 0.5)
                 {

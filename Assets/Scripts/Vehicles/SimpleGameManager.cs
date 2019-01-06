@@ -11,12 +11,10 @@ public class SimpleGameManager : MonoBehaviour {
 
 	public GameObject _aiCarPrefab;
 	public GameObject _playerCarPrefab;
-	public int nrOfCars = 10;
+	public int nrOfCars;
+	public TrackMaker _trackMaker;
 
-	public static float maxRayLength = 10;
-
-	[SerializeField]
-	private TrackMaker _trackMaker;
+	Random rng;
 
 	/// <summary>
 	/// Used by UI controller
@@ -26,6 +24,7 @@ public class SimpleGameManager : MonoBehaviour {
 	// Start is called before the first frame update
 	void Start() {
 		_cars = new GameObject[nrOfCars];
+		rng = new Random();
 	}
 
 	// Update is called once per frame
@@ -96,8 +95,7 @@ public class SimpleGameManager : MonoBehaviour {
 
 	private GameObject SelectBiasBest(List<GameObject> cars, int pointsTotal)
 	{
-		var random = new Random();
-		var randomPoints = random.Next(pointsTotal);
+		var randomPoints = rng.Next(pointsTotal);
 
 		var totalIterator = 0;
 		
