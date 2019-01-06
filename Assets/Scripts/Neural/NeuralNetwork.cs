@@ -11,12 +11,12 @@ public class NeuralNetwork : MonoBehaviour
     public int inputSize;
     public int outputSize;
     
-    private static double softplusRelu(double x)
+    private static double SoftplusRelu(double x)
     {
         return Math.Log(1 + Math.Pow(Math.E, x));
     }
 
-    private static double sigmoid(double x)
+    private static double Sigmoid(double x)
     {
         return 1 / (1 + Math.Pow(Math.E, -x));
     }
@@ -55,7 +55,7 @@ public class NeuralNetwork : MonoBehaviour
         _initiated = true;
     }
 
-    public double[] calculate(params double[] input)
+    public double[] Calculate(params double[] input)
     {
         if (input.Length != inputSize)
         {
@@ -81,7 +81,7 @@ public class NeuralNetwork : MonoBehaviour
         // Based on every layer weight and bias, calculate the layer values
         for (var i = 0; i < weights.Count; i++)
         {
-            layer = (layer * weights[i] + biases[i]).Map(x => sigmoid(x));
+            layer = (layer * weights[i] + biases[i]).Map(x => Math.Tanh(x / 2));
         }        
         
         // Last layer to be calculated is the output
@@ -92,7 +92,7 @@ public class NeuralNetwork : MonoBehaviour
     private const double MutationChanceBias = 0.2;
 
     
-    public static Tuple<List<Matrix<double>>, List<Vector<double>>> merge(NeuralNetwork network1,
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> Merge(NeuralNetwork network1,
         NeuralNetwork network2)
     {
         List<Matrix<double>> newWeights = new List<Matrix<double>>(network1.weights.Count);

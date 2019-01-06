@@ -29,7 +29,7 @@ public class CombinedCarController : MonoBehaviour {
 
         if (AI)
         {
-	        var results = _neuralNetwork.calculate(SensorData.Select(x => (double)x.Distance).ToArray());
+	        var results = _neuralNetwork.Calculate(SensorData.Select(x => (double)x.Distance).ToArray());
 	        ControlVehicle((float) results[0], (float) results[1] * 2.0f - 1.0f); //TODO: Hook up to NN
 		} else {
 			ControlVehicle(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));

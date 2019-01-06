@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class CarController : MonoBehaviour {
 	public float maxAcc, maxTurn, wheelFriction;
@@ -9,26 +8,22 @@ public class CarController : MonoBehaviour {
 	public int points = 0;
 	float startTime, lastTime;
 	public float TotalTime => lastTime - startTime;
-
-	public float[] debugSensorValues;
-
-	public CarSensor.SensorData[] SensorData => _sensors == null 
-		? new CarSensor.SensorData[0] 
-		: _sensors.Select(x => x.Data).ToArray();
-
-	public int Id { get; set; }
-
-	private CarSensor[] _sensors;
-	private NeuralNetwork _neuralNetwork;
+	//AI Driving
+	public float[] sensorAngles;
+	public Vector2[] sensorDirections;
+	NeuralNetwork neuralNetwork;
 
 	void Start() {
 		rb = GetComponent<Rigidbody2D>();
 		maxTurn *= Mathf.Deg2Rad;
 		wheelFriction *= 10;
 		startTime = Time.time;
-
-		_sensors = GetComponentsInChildren<CarSensor>();
-		_neuralNetwork = GetComponent<NeuralNetwork>();
+		//Initialize sensors
+		sensorDirections = new Vector2[sensorAngles.Length];
+		for (int i = 0; i < sensorAngles.Length; i++) {
+			sensorDirections[i] = new Vector2(Mathf.Cos(sensorAngles[i] * Mathf.Deg2Rad), -Mathf.Sin(sensorAngles[i] * Mathf.Deg2Rad));
+		}
+		neuralNetwork = GetComponent<NeuralNetwork>();
 	}
 
 	void OnTriggerEnter2D(Collider2D collision) {
@@ -40,13 +35,14 @@ public class CarController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		debugSensorValues = SensorData.Select(x => x.Distance).ToArray();
-
 		if (AI) {
-			var results = _neuralNetwork.calculate(SensorData.Select(x => (double)x.Distance).ToArray());
-			ControlVehicle((float)results[0], (float)results[1] * 2.0f - 1.0f); //TODO: Hook up to NN
+			double[] results = neuralNetwork.Calculate(System.Array.ConvertAll<Vector2, double>(sensorDirections, direction => {
+				RaycastHit2D hit = Physics2D.Raycast(rb.position, rb.GetRelativeVector(direction), float.PositiveInfinity, LayerMask.GetMask("Wall"));
+				return hit ? hit.distance : float.MaxValue;
+			}));
+			ControlVehicle((float) results[0], (float) results[1]);
 
-			//End car if it has not gone through any checkpoint for 3 seconds
+			//Stop car if it has not gone through any checkpoint for 3 seconds
 			if (Time.time > lastTime + 3) {
 				enabled = false;
 			}

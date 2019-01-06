@@ -47,7 +47,7 @@ MonoBehaviour:
   segment: {fileID: 6495660403446902247, guid: 49c0797892d59c24ea8c1082abb06bbb, type: 3}
   checkpoint: {fileID: 2190176050586185444, guid: c63955ebc60b91e488864e101184b627,
     type: 3}
-  trackWidth: 3
+  trackWidth: 6.5
   wallWidth: 0.5
   checkpointWidth: 0.05
   segmentCount: 12
@@ -65,7 +65,7 @@ GameObject:
   - component: {fileID: 2752467276780496421}
   - component: {fileID: 2752467276780496420}
   - component: {fileID: 8711181909841283290}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: PreTrack
   m_TagString: Wall
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 2752467276780496419}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e1772ccf83a0c2a4281db08627af430e, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -158,7 +158,7 @@ EdgeCollider2D:
   m_GameObject: {fileID: 2752467276780496419}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: e1772ccf83a0c2a4281db08627af430e, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -179,5 +179,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1538222f71a15c949959df3effd96056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  trackWidth: 3
+  trackWidth: 6.5
   wallWidth: 0.5
