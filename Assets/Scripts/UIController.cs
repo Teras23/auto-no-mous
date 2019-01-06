@@ -21,12 +21,12 @@ public class UIController : MonoBehaviour {
 
 	void Start() {
 		playButton.onClick.AddListener(EnterPlayMode);
-		levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
+		//levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
 		editButton.onClick.AddListener(EnterBuildMode);
 
 		_toDisableInBuildMode.AddRange(new Selectable[]
 		{
-			playButton, levelButton, editButton, participation, timeSpeed
+			playButton, /*levelButton,*/ editButton, participation, timeSpeed
 		});
 	}
 
