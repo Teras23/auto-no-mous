@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using UnityEditorInternal;
-using UnityEngine;
-using Random = UnityEngine.Random;
+﻿using UnityEngine;
 
 public class SimpleGameManager : MonoBehaviour
 {
@@ -52,7 +48,7 @@ public class SimpleGameManager : MonoBehaviour
         for (var i = 0; i < nrOfCars; i++)
         {
             var car = Instantiate(carPrefab);
-            car.GetComponent<CombinedCarController>().AI = true;
+            car.GetComponent<CarController>().AI = true;
             _cars[i] = car;
         }
     }
