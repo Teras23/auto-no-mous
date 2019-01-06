@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrackMaker : MonoBehaviour
-{
-    private bool _inBuildMode;
-    public bool InBuildMode => _inBuildMode;
+public class TrackMaker : MonoBehaviour {
+	public bool InBuildMode { get; set; }
 	public TrackSegment segment;
 	public Checkpoint checkpoint;
 	public float trackWidth, wallWidth, checkpointWidth;
@@ -29,17 +27,15 @@ public class TrackMaker : MonoBehaviour
 		cam = Camera.main;
 	}
 
-	public void EnterBuildMode()
-    {
-        _inBuildMode = true;
+	public void EnterBuildMode() {
+		InBuildMode = true;
 		MousePlace();
 		StartCoroutine(BuildMode());
 	}
 
-	public void LeaveBuildMode()
-    {
-        _inBuildMode = false;
-        StopAllCoroutines();
+	public void LeaveBuildMode() {
+		InBuildMode = false;
+		StopAllCoroutines();
 		Remove();
 	}
 
@@ -209,7 +205,7 @@ public class TrackMaker : MonoBehaviour
 		return 2 * a * t + b;
 	}
 
-    static void SolveQuadratic(float slope, float x0, float x1, out float a, out float b, out float c) {
+	static void SolveQuadratic(float slope, float x0, float x1, out float a, out float b, out float c) {
 		c = x0;
 		b = slope;
 		a = x1 - x0 - slope;

@@ -19,13 +19,12 @@ public class CarController : MonoBehaviour {
 		maxTurn *= Mathf.Deg2Rad;
 		wheelFriction *= 10;
 		startTime = Time.time;
+		lastTime = Time.time;
 		//Initialize sensors
 		sensorDirections = new Vector2[sensorAngles.Length];
 		for (int i = 0; i < sensorAngles.Length; i++) {
 			sensorDirections[i] = new Vector2(Mathf.Cos(sensorAngles[i] * Mathf.Deg2Rad), -Mathf.Sin(sensorAngles[i] * Mathf.Deg2Rad));
 		}
-
-		lastTime = Time.time;
 	}
 
 	void OnTriggerEnter2D(Collider2D collision) {
@@ -42,12 +41,11 @@ public class CarController : MonoBehaviour {
 				RaycastHit2D hit = Physics2D.Raycast(rb.position, rb.GetRelativeVector(direction), float.PositiveInfinity, LayerMask.GetMask("Wall"));
 				return hit ? hit.distance : float.MaxValue;
 			}));
-			
 			ControlVehicle((float) results[0], (float) results[1]);
 
 			//Stop car if it has not gone through any checkpoint for 3 seconds
 			if (Time.time > lastTime + 3) {
-				gameObject.SetActive(false);;
+				gameObject.SetActive(false);
 			}
 		} else {
 			ControlVehicle(Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("Horizontal"));
