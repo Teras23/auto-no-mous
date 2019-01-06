@@ -1850,8 +1850,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 209, y: 543.5}
-  m_SizeDelta: {x: 318, y: 987}
+  m_AnchoredPosition: {x: 256.5, y: 387}
+  m_SizeDelta: {x: 413, y: 674}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &6787876951879118712
 Canvas:
@@ -1972,6 +1972,7 @@ MonoBehaviour:
   participation: {fileID: 3122148375541772540}
   levelField: {fileID: 4580507886917089864}
   editButton: {fileID: 957948514699144916}
+  generationText: {fileID: 4671351535394190495}
   trackMaker: {fileID: 2780156438211603158}
   gameManager: {fileID: 3640496923109174979}
   menu: {fileID: 5321286426660122100}

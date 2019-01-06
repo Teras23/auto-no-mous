@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour {
 	public Toggle participation;
 	public InputField levelField;
 	public Button editButton;
+    public Text generationText;
 
 	public TrackMaker trackMaker;
 	bool inBuildMode = false;
@@ -30,7 +31,11 @@ public class UIController : MonoBehaviour {
 		if (Input.GetButtonDown("Play")) {
 			TogglePlayMode();
 		}
-	}
+
+        //TODO: update gen
+        //generationText.text = gameManager.
+
+    }
 
 	public void TogglePlayMode() {
 		if (!inBuildMode) {
