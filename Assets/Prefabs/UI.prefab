@@ -86,9 +86,7 @@ MonoBehaviour:
 
     Place segment: LMB
 
-    Undo segment: Esc | Backspace
-
-    Confirm and exit: B'
+    Undo segment: Esc | Backspace'
 --- !u!1 &676369921184514991
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,12 +587,12 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 7057355428501217110}
+        m_MethodName: ToggleBuildMode
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -766,7 +764,6 @@ GameObject:
   - component: {fileID: 5321286426660122100}
   - component: {fileID: 7430040121310462284}
   - component: {fileID: 5821735715728929449}
-  - component: {fileID: 7050231866224463824}
   m_Layer: 5
   m_Name: MenuPanel
   m_TagString: Untagged
@@ -835,18 +832,6 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
---- !u!225 &7050231866224463824
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3449809718583663877}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!1 &3658257543267534927
 GameObject:
   m_ObjectHideFlags: 0
@@ -1703,16 +1688,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6edc40c44cb81b14099b5367a267afb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playButton: {fileID: 6481247208289917905}
-  levelButton: {fileID: 0}
-  editButton: {fileID: 957948514699144916}
-  participation: {fileID: 3122148375541772540}
   timeSpeed: {fileID: 4388515676565128892}
-  trackMaker: {fileID: 0}
+  playButton: {fileID: 6481247208289917905}
+  participation: {fileID: 3122148375541772540}
+  levelField: {fileID: 4580507886917089864}
+  editButton: {fileID: 957948514699144916}
+  trackMaker: {fileID: 2780156438211603158}
   gameManager: {fileID: 3640496923109174979}
-  menu: {fileID: 7050231866224463824}
-  buildShortcuts: {fileID: 0}
-  playButtonGroup: {fileID: 0}
+  menu: {fileID: 5321286426660122100}
+  buildShortcuts: {fileID: 2829442265712739749}
+  playButtonGroup: {fileID: 2865715849376599321}
 --- !u!114 &3640496923109174979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1922,7 +1907,18 @@ MonoBehaviour:
   m_CharacterLimit: 0
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 7057355428501217110}
+        m_MethodName: LoadLevel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.InputField+SubmitEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
   m_OnValueChanged:
@@ -2121,6 +2117,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 343e9e1970db70146991f7b4ef531978, type: 3}
+--- !u!114 &2780156438211603158 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2321346184040110146, guid: 343e9e1970db70146991f7b4ef531978,
+    type: 3}
+  m_PrefabInstance: {fileID: 477959366141899412}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9437c3ba139b8a84289f74c6935aced0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2509695863004043920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2627347450279159812, guid: 343e9e1970db70146991f7b4ef531978,

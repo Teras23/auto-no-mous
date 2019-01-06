@@ -5,28 +5,24 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour {
 	private readonly List<Selectable> _toDisableInBuildMode = new List<Selectable>();
 
-	public Button playButton;
-	public Button levelButton;
-	public Button editButton;
-	public Toggle participation;
 	public Slider timeSpeed;
+	public Button playButton;
+	public Toggle participation;
+	public InputField levelField;
+	public Button editButton;
 
 	public TrackMaker trackMaker;
 	bool inBuildMode = false;
 	public SimpleGameManager gameManager;
 
-	public CanvasGroup menu;
-	public CanvasGroup buildShortcuts;
-	public CanvasGroup playButtonGroup;
+	public RectTransform menu;
+	public RectTransform buildShortcuts;
+	public RectTransform playButtonGroup;
 
 	void Start() {
-		playButton.onClick.AddListener(EnterPlayMode);
-		//levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
-		editButton.onClick.AddListener(EnterBuildMode);
-
 		_toDisableInBuildMode.AddRange(new Selectable[]
 		{
-			playButton, /*levelButton,*/ editButton, participation, timeSpeed
+			playButton, editButton, participation, timeSpeed
 		});
 	}
 
@@ -39,15 +35,6 @@ public class UIController : MonoBehaviour {
 				EnterPlayMode();
 			}
 		}
-
-		if (Input.GetButtonDown("EnterBuildMode") && (gameManager == null || !gameManager.InGame)) {
-			if (inBuildMode) {
-				HideUiForBuildMode();
-				trackMaker.LeaveBuildMode();
-			} else {
-				EnterBuildMode();
-			}
-		}
 	}
 
 	private void EnterPlayMode() {
@@ -55,35 +42,35 @@ public class UIController : MonoBehaviour {
 		gameManager.EnterPlayMode(participation.isOn);
 	}
 
-	private void DisplayLevelSelectionMenu() {
-		//TODO: stuff
+	public void LoadLevel() {
+		trackMaker.BuildTrack(int.Parse(levelField.text));
 	}
 
-	private void EnterBuildMode() {
-		DisplayUiForBuildMode();
-		trackMaker.EnterBuildMode();
+	public void ToggleBuildMode() {
+		inBuildMode = !inBuildMode;
+		if (inBuildMode) {
+			trackMaker.EnterBuildMode();
+		} else {
+			trackMaker.LeaveBuildMode();
+		}
 	}
 
-
-
-	private void DisplayUiForBuildMode() {
+	private void DisplayUI() {
 		foreach (var input in _toDisableInBuildMode) {
 			input.enabled = false;
 		}
 
-		menu.alpha = 0;
-		menu.interactable = false;
+		menu.gameObject.SetActive(false);
 
 		//buildShortcuts.alpha = 1;
 	}
 
-	private void HideUiForBuildMode() {
+	private void HideUI() {
 		foreach (var input in _toDisableInBuildMode) {
 			input.enabled = true;
 		}
 
-		menu.alpha = 1;
-		menu.interactable = true;
+		menu.gameObject.SetActive(true);
 
 		//buildShortcuts.alpha = 0;
 	}
