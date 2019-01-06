@@ -27,7 +27,7 @@ public class CarController : MonoBehaviour {
 		}
 	}
 
-	void OnTriggerEnter2D(Collider2D collision) {
+	void OnTriggerExit2D(Collider2D collision) {
 		int n = collision.GetComponent<Checkpoint>().order;
 		if (n == points + 1) {
 			points = n;
