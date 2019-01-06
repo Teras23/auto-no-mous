@@ -12,6 +12,7 @@ public class UIController : MonoBehaviour {
 	public Slider timeSpeed;
 
 	public TrackMaker trackMaker;
+	bool inBuildMode = false;
 	public SimpleGameManager gameManager;
 
 	public CanvasGroup menu;
@@ -30,7 +31,7 @@ public class UIController : MonoBehaviour {
 	}
 
 	void Update() {
-		if (gameManager != null && Input.GetButtonDown("Play") && !trackMaker.InBuildMode) {
+		if (gameManager != null && Input.GetButtonDown("Play") && !inBuildMode) {
 			if (gameManager.InGame) {
 				// HideUiForPlayMode()
 				gameManager.LeavePlayMode();
@@ -40,7 +41,7 @@ public class UIController : MonoBehaviour {
 		}
 
 		if (Input.GetButtonDown("EnterBuildMode") && (gameManager == null || !gameManager.InGame)) {
-			if (trackMaker.InBuildMode) {
+			if (inBuildMode) {
 				HideUiForBuildMode();
 				trackMaker.LeaveBuildMode();
 			} else {

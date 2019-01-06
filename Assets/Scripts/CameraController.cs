@@ -66,6 +66,9 @@ public class CameraController : MonoBehaviour {
 				transform.localRotation = Quaternion.identity;
 				break;
 			case CameraMode.Follow:
+				if (player == null) {
+					return;
+				}
 				transform.parent = player.transform;
 				transform.localPosition = new Vector3(-Mathf.Sqrt(75), 0, -5);
 				transform.localRotation = Quaternion.Euler(0, 60, -90);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TrackMaker : MonoBehaviour {
-	public bool InBuildMode { get; set; }
 	public TrackSegment segment;
 	public Checkpoint checkpoint;
 	public float trackWidth, wallWidth, checkpointWidth;
@@ -28,13 +27,11 @@ public class TrackMaker : MonoBehaviour {
 	}
 
 	public void EnterBuildMode() {
-		InBuildMode = true;
 		MousePlace();
 		StartCoroutine(BuildMode());
 	}
 
 	public void LeaveBuildMode() {
-		InBuildMode = false;
 		StopAllCoroutines();
 		Remove();
 	}
