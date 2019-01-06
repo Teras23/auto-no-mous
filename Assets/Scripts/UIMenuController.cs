@@ -4,8 +4,8 @@ using UnityEngine.UI;
 
 public class UIMenuController : MonoBehaviour
 {
-    public CustomTrackMaker customTrackMaker;
-    public SimpleGameManager gameManager;
+    private CustomTrackMaker _customTrackMaker;
+    private SimpleGameManager _gameManager;
 
     public Button playButton;
     public Button levelButton;
@@ -22,6 +22,9 @@ public class UIMenuController : MonoBehaviour
 
     void Start()
     {
+        _customTrackMaker = FindObjectOfType<CustomTrackMaker>();
+        _gameManager = FindObjectOfType<SimpleGameManager>();
+
         playButton.onClick.AddListener(EnterPlayMode);
         levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
         editButton.onClick.AddListener(EnterBuildMode);
@@ -38,7 +41,7 @@ public class UIMenuController : MonoBehaviour
 
         if (Input.GetButtonDown("EnterBuildMode"))
         {
-            if (customTrackMaker.InBuildMode)
+            if (_customTrackMaker.InBuildMode)
             {
                 LeaveBuildMode();
             }
@@ -78,14 +81,14 @@ public class UIMenuController : MonoBehaviour
     {
         DisplayUiForBuildMode();
 
-        customTrackMaker.EnterBuildMode();
+        _customTrackMaker.EnterBuildMode();
     }
 
     private void LeaveBuildMode()
     {
         HideUiForBuildMode();
 
-        customTrackMaker.CommitAndLeaveBuildMode();
+        _customTrackMaker.CommitAndLeaveBuildMode();
     }
 
     public void DisplayUiForBuildMode()
