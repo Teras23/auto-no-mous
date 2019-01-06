@@ -20,10 +20,6 @@ public class UIController : MonoBehaviour {
 	public CanvasGroup playButtonGroup;
 
 	void Start() {
-		playButton.onClick.AddListener(EnterPlayMode);
-		levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
-		editButton.onClick.AddListener(EnterBuildMode);
-
 		_toDisableInBuildMode.AddRange(new Selectable[]
 		{
 			playButton, levelButton, editButton, participation, timeSpeed
@@ -39,15 +35,6 @@ public class UIController : MonoBehaviour {
 				EnterPlayMode();
 			}
 		}
-
-		if (Input.GetButtonDown("EnterBuildMode") && (gameManager == null || !gameManager.InGame)) {
-			if (inBuildMode) {
-				HideUiForBuildMode();
-				trackMaker.LeaveBuildMode();
-			} else {
-				EnterBuildMode();
-			}
-		}
 	}
 
 	private void EnterPlayMode() {
@@ -55,16 +42,16 @@ public class UIController : MonoBehaviour {
 		gameManager.EnterPlayMode(participation.isOn);
 	}
 
-	private void DisplayLevelSelectionMenu() {
-		//TODO: stuff
+	public void ToggleBuildMode() {
+		inBuildMode = !inBuildMode;
+		if (inBuildMode) {
+			DisplayUiForBuildMode();
+			trackMaker.EnterBuildMode();
+		} else {
+			HideUiForBuildMode();
+			trackMaker.LeaveBuildMode();
+		}
 	}
-
-	private void EnterBuildMode() {
-		DisplayUiForBuildMode();
-		trackMaker.EnterBuildMode();
-	}
-
-
 
 	private void DisplayUiForBuildMode() {
 		foreach (var input in _toDisableInBuildMode) {

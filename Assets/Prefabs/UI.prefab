@@ -86,9 +86,7 @@ MonoBehaviour:
 
     Place segment: LMB
 
-    Undo segment: Esc | Backspace
-
-    Confirm and exit: B'
+    Undo segment: Esc | Backspace'
 --- !u!1 &676369921184514991
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,7 +587,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 6787876951964584024}
         m_MethodName: 
         m_Mode: 1
         m_Arguments:
@@ -1708,7 +1706,7 @@ MonoBehaviour:
   editButton: {fileID: 957948514699144916}
   participation: {fileID: 3122148375541772540}
   timeSpeed: {fileID: 4388515676565128892}
-  trackMaker: {fileID: 0}
+  trackMaker: {fileID: 2780156438211603158}
   gameManager: {fileID: 3640496923109174979}
   menu: {fileID: 7050231866224463824}
   buildShortcuts: {fileID: 0}
@@ -2121,6 +2119,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 343e9e1970db70146991f7b4ef531978, type: 3}
+--- !u!114 &2780156438211603158 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2321346184040110146, guid: 343e9e1970db70146991f7b4ef531978,
+    type: 3}
+  m_PrefabInstance: {fileID: 477959366141899412}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9437c3ba139b8a84289f74c6935aced0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &2509695863004043920 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2627347450279159812, guid: 343e9e1970db70146991f7b4ef531978,
