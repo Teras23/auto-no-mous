@@ -1764,19 +1764,19 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6787876951879118715}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 5321286426660122100}
-  m_Father: {fileID: 4037229270668205063}
+  m_Father: {fileID: 9181578807789285020}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 209, y: 543.5}
-  m_SizeDelta: {x: 318, y: 987}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0, y: 0}
 --- !u!223 &6787876951879118712
 Canvas:
   m_ObjectHideFlags: 0
@@ -1845,11 +1845,9 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 4037229270668205063}
+  - component: {fileID: 9181578807789285020}
   - component: {fileID: 7057355428501217110}
   - component: {fileID: 3640496923109174979}
-  - component: {fileID: 5746946046237793109}
-  - component: {fileID: 9053396647516882719}
   m_Layer: 0
   m_Name: UI
   m_TagString: Untagged
@@ -1857,8 +1855,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &4037229270668205063
-RectTransform:
+--- !u!4 &9181578807789285020
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1874,11 +1872,6 @@ RectTransform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7057355428501217110
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1913,54 +1906,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fdb1dddda35aab40ab26b29471474cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  generation: 1
   _aiCarPrefab: {fileID: 2350816269097066856, guid: ba04b23fc128a4e438f2cbdd6866faa1,
     type: 3}
   _playerCarPrefab: {fileID: 2350816269097066856, guid: 12aaa8a76879fa84c900dbe9baea4135,
     type: 3}
   nrOfCars: 25
   _trackMaker: {fileID: 2780156438211603158}
---- !u!222 &5746946046237793109
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6787876951964584024}
-  m_CullTransparentMesh: 0
---- !u!114 &9053396647516882719
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6787876951964584024}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 708705254, guid: f70555f144d8491a825f0804e09c671c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
-      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_FontData:
-    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
-    m_FontSize: 14
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
-    m_MaxSize: 40
-    m_Alignment: 0
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: 
 --- !u!1 &6787876952837618315
 GameObject:
   m_ObjectHideFlags: 0
@@ -1990,7 +1942,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4037229270668205063}
+  m_Father: {fileID: 9181578807789285020}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6787876952837618313
@@ -2428,7 +2380,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 4037229270668205063}
+    m_TransformParent: {fileID: 9181578807789285020}
     m_Modifications:
     - target: {fileID: 2627347450279159808, guid: 343e9e1970db70146991f7b4ef531978,
         type: 3}

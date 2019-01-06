@@ -11,8 +11,6 @@ public class SimpleGameManager : MonoBehaviour {
 
 	public GameObject _aiCarPrefab;
 	public GameObject _playerCarPrefab;
-
-	[SerializeField]
 	public int nrOfCars = 10;
 
 	public static float maxRayLength = 10;
