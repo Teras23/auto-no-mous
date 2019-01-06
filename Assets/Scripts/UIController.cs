@@ -32,9 +32,7 @@ public class UIController : MonoBehaviour {
 			TogglePlayMode();
 		}
 
-        //TODO: update gen
-        //generationText.text = gameManager.
-
+        generationText.text = $"Generation: {gameManager.generation}";
     }
 
 	public void TogglePlayMode() {
