@@ -94,8 +94,8 @@ public class SimpleGameManager : MonoBehaviour {
 		started = true;
 	}
 
-	private const float Mutate = 0.3f;
-	private const float Crossover = 0.4f;
+	private const float Mutate = 0.4f;
+	private const float Crossover = 0.2f;
 
 	private GameObject SelectBiasBest(List<GameObject> cars, int pointsTotal)
 	{
@@ -108,7 +108,7 @@ public class SimpleGameManager : MonoBehaviour {
 		{
 			totalIterator += car.GetComponent<CarController>().points;			
 			
-			if (totalIterator < randomPoints)
+			if (totalIterator > randomPoints)
 			{
 				return car;
 			}
@@ -154,7 +154,7 @@ public class SimpleGameManager : MonoBehaviour {
 			_cars[i].name = "AICar (Mutated and crossed)";
 			_cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.red;
 		}
-
+		
 		generation++;
 	}
 }
