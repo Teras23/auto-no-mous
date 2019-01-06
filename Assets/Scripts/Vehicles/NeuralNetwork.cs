@@ -108,12 +108,62 @@ public class NeuralNetwork : MonoBehaviour
     private const double MutationChance = 0.2;
     private const double MutationChanceBias = 0.2;
 
-    public static Tuple<List<Matrix<double>>, List<Vector<double>>> Merge(GameObject go1, GameObject go2)
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> CrossOver(GameObject go1, GameObject go2)
     {
-        return Merge(go1.GetComponent<NeuralNetwork>(), go2.GetComponent<NeuralNetwork>());
+        return CrossOver(go1.GetComponent<NeuralNetwork>(), go2.GetComponent<NeuralNetwork>());
     }
     
-    public static Tuple<List<Matrix<double>>, List<Vector<double>>> Merge(NeuralNetwork network1,
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> Mutate(GameObject go)
+    {
+        return Mutate(go.GetComponent<NeuralNetwork>());
+    }
+    
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> Mutate(NeuralNetwork network1)
+    {
+        List<Matrix<double>> newWeights = new List<Matrix<double>>();
+        List<Vector<double>> newBiases = new List<Vector<double>>();
+        
+        Random random = new Random();
+
+        for (var i = 0; i < network1.weights.Count; i++)
+        {
+            var newWeight = Matrix<double>.Build.Random(network1.weights[i].RowCount, network1.weights[i].ColumnCount);
+
+            for (var r = 0; r < newWeight.RowCount; r++)
+            {
+                for (var c = 0; c < newWeight.ColumnCount; c++)
+                {
+                    var choice = random.NextDouble();
+                    
+                    if (choice > MutationChance)
+                    {
+                        newWeight[r, c] = network1.weights[i][r, c];
+                    }               
+                }
+            }
+            newWeights.Add(newWeight);
+        }
+        
+        for (var i = 0; i < network1.biases.Count; i++)
+        {
+            var newBias = Vector<double>.Build.Random(network1.biases[i].Count);
+
+            for (var c = 0; c < newBias.Count; c++)
+            {
+                var choice = random.NextDouble();
+                    
+                if (choice > MutationChanceBias)
+                {
+                    newBias[c] = network1.biases[i][c];
+                } 
+            }
+            newBiases.Add(newBias);
+        }
+        
+        return new Tuple<List<Matrix<double>>, List<Vector<double>>>(newWeights, newBiases);
+    }
+    
+    public static Tuple<List<Matrix<double>>, List<Vector<double>>> CrossOver(NeuralNetwork network1,
         NeuralNetwork network2)
     {
         List<Matrix<double>> newWeights = new List<Matrix<double>>();
@@ -131,11 +181,11 @@ public class NeuralNetwork : MonoBehaviour
                 {
                     var choice = random.NextDouble();
                     
-                    if (choice < (1 - MutationChance) / 2)
+                    if (choice <  0.5)
                     {
                         newWeight[r, c] = network1.weights[i][r, c];
                     }
-                    else if (choice < 1 - MutationChance)
+                    else
                     {
                         newWeight[r, c] = network2.weights[i][r, c];
                     }                    
@@ -152,11 +202,11 @@ public class NeuralNetwork : MonoBehaviour
             {
                 var choice = random.NextDouble();
                     
-                if (choice < (1 - MutationChanceBias) / 2)
+                if (choice < 0.5)
                 {
                     newBias[c] = network1.biases[i][c];
                 }
-                else if (choice < 1 - MutationChanceBias)
+                else
                 {
                     newBias[c] = network2.biases[i][c];
                 }  

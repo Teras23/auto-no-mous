@@ -53,7 +53,7 @@ public class SimpleGameManager : MonoBehaviour {
 		_inGame = true;
 
 		if (includePlayer) {
-			_playerCar = GameObject.Instantiate(_playerCarPrefab);
+			_playerCar = Instantiate(_playerCarPrefab);
 		}
 
 		ClearCars();
@@ -93,7 +93,7 @@ public class SimpleGameManager : MonoBehaviour {
 		started = true;
 	}
 
-	private const float LastInclude = 0.2f;
+	private const float Mutate = 0.2f;
 	private const float Merge = 0.6f;
 
 	private void SpawnNewCars() {
@@ -102,20 +102,21 @@ public class SimpleGameManager : MonoBehaviour {
 		ClearCars();
 		SpawnCars();
 
-		// Include the best 2 in the next run
-		for (var i = 0; i < (int) (nrOfCars * LastInclude); i++) {
-			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(lastCars[i].GetComponent<NeuralNetwork>().GetNetwork());
+		// Mutate some cars
+		for (var i = 0; i < (int) (nrOfCars * Mutate); i++) {
+			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.Mutate(lastCars[i]));
 		}
 
-		Debug.Log((int) (nrOfCars * LastInclude));
-		Debug.Log((int) (nrOfCars * Merge));
-
-		// Merge 6 of the cars
-		for (var i = (int) (nrOfCars * LastInclude); i < (int) (nrOfCars * Merge); i++) {
-			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.Merge(lastCars[0], lastCars[1]));
+		// Crossover some other cars
+		for (var i = (int) (nrOfCars * Mutate); i < (int) (nrOfCars * Merge); i++) {
+			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.CrossOver(lastCars[0], lastCars[1]));
 		}
 
-		// Let 2 cars be totally random again
+		// Crossover and mutate the rest of the cars
+		for (var i = (int) (nrOfCars * Merge); i < _cars.Length; i++) {
+			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.CrossOver(lastCars[0], lastCars[1]));
+			_cars[i].GetComponent<NeuralNetwork>().SetNetwork(NeuralNetwork.Mutate(_cars[i]));
+		}
 
 		generation++;
 	}
