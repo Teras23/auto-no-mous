@@ -102,7 +102,9 @@ MonoBehaviour:
   sensorAngles:
   - -90
   - -45
+  - -22.5
   - 0
+  - 22.5
   - 45
   - 90
 --- !u!114 &9059765811546694183
@@ -117,8 +119,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c3922de4e3a98411885033c74127fe0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hiddenLayers: 0800000008000000
-  inputSize: 7
+  hiddenLayers: 0900000005000000
+  inputSize: 9
   outputSize: 2
 --- !u!1001 &2350816269531917068
 PrefabInstance:
@@ -127,6 +129,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2350816269097066857}
     m_Modifications:
+    - target: {fileID: 100000, guid: 5ab5154c252b2eb49a59b5f91d3d2a9c, type: 3}
+      propertyPath: m_Name
+      value: Car
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 5ab5154c252b2eb49a59b5f91d3d2a9c, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -182,10 +188,6 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 5ab5154c252b2eb49a59b5f91d3d2a9c, type: 3}
       propertyPath: m_LocalScale.z
       value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 100000, guid: 5ab5154c252b2eb49a59b5f91d3d2a9c, type: 3}
-      propertyPath: m_Name
-      value: Car
       objectReference: {fileID: 0}
     - target: {fileID: 400008, guid: 5ab5154c252b2eb49a59b5f91d3d2a9c, type: 3}
       propertyPath: m_LocalRotation.x
