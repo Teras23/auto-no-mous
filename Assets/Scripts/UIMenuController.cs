@@ -4,25 +4,35 @@ using UnityEngine.UI;
 
 public class UIMenuController : MonoBehaviour
 {
-    public TrackMaker trackMaker;
-    public SimpleGameManager gameManager;
+    private CustomTrackMaker _customTrackMaker;
+    private SimpleGameManager _gameManager;
 
     public Button playButton;
+    public Button levelButton;
     public Button editButton;
     public Toggle participation;
     public Slider timeSpeed;
 
-    private List<Selectable> _toDisableInGame = new List<Selectable>();
+    public CanvasGroup uiBuildShortcuts;
+
+    private List<Selectable> _toDisableInBuildMode = new List<Selectable>();
 
 
     private bool _isActive;
 
     void Start()
     {
+        _customTrackMaker = FindObjectOfType<CustomTrackMaker>();
+        _gameManager = FindObjectOfType<SimpleGameManager>();
+
         playButton.onClick.AddListener(EnterPlayMode);
+        levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
         editButton.onClick.AddListener(EnterBuildMode);
 
-        _toDisableInGame.Add(participation);
+        _toDisableInBuildMode.AddRange(new List<Selectable>
+        {
+            playButton, levelButton, editButton, participation, timeSpeed
+        });
     }
 
     void Update()
@@ -31,58 +41,87 @@ public class UIMenuController : MonoBehaviour
 
         if (Input.GetButtonDown("EnterBuildMode"))
         {
-            if (!_isActive)
+            if (_customTrackMaker.InBuildMode)
             {
-                EnterBuildMode();
+                LeaveBuildMode();
             }
             else
             {
-                // Based on current logic in TrackMaker
-                EnableConfiguration();
+                EnterBuildMode();
             }
         }
     }
 
-    private void EnterBuildMode()
-    {
-        DisableConfiguration();
-
-        // TODO: gib public "edit" method pls
-        //trackMaker.EnterBuildMode()
-    }
-
     private void EnterPlayMode()
     {
-        DisableConfiguration();
+        // ShowPlayModeInputs()
 
         // TODO: gib public "play" method pls
         //gameManager.EnterPlayMode()
     }
 
-    public void DisableConfiguration()
+    private void LeavePlayMode()
+    {
+        // HidePlayModeInputs()
+
+        //gameManager.LeavePlayMode()
+    }
+
+    private void DisplayLevelSelectionMenu()
+    {
+
+    }
+
+    private void HideLevelSelectionMenu()
+    {
+
+    }
+
+    private void EnterBuildMode()
+    {
+        DisplayUiForBuildMode();
+
+        _customTrackMaker.EnterBuildMode();
+    }
+
+    private void LeaveBuildMode()
+    {
+        HideUiForBuildMode();
+
+        _customTrackMaker.CommitAndLeaveBuildMode();
+    }
+
+    public void DisplayUiForBuildMode()
     {
         _isActive = false;
 
-        foreach (var input in _toDisableInGame)
+        foreach (var input in _toDisableInBuildMode)
         {
             input.enabled = false;
         }
 
-        // canvasGroup.alpha = 0.8f;
+        var menu = GetComponent<CanvasGroup>();
+        menu.alpha = 0;
+        menu.interactable = false;
+
+        uiBuildShortcuts.alpha = 1;
     }
 
 
     // TODO: call from some sort of "back" or "restart" action
-    public void EnableConfiguration()
+    public void HideUiForBuildMode()
     {
         _isActive = true;
 
-        foreach (var input in _toDisableInGame)
+        foreach (var input in _toDisableInBuildMode)
         {
             input.enabled = true;
         }
 
-        var canvasGroup = GetComponent<CanvasGroup>();
-        canvasGroup.alpha = 1;
+        var menu = GetComponent<CanvasGroup>();
+        menu.alpha = 1;
+        menu.interactable = true;
+
+        uiBuildShortcuts.alpha = 0;
     }
 }
