@@ -60,9 +60,11 @@ public class UIController : MonoBehaviour {
 	public void ToggleBuildMode() {
 		inBuildMode = !inBuildMode;
 		if (inBuildMode) {
-			trackMaker.EnterBuildMode();
+            playButton.GetComponentInChildren<Text>().text = "Save changes";
+            trackMaker.EnterBuildMode();
 		} else {
-			trackMaker.LeaveBuildMode();
+            playButton.GetComponentInChildren<Text>().text = "Custom track";
+            trackMaker.LeaveBuildMode();
 		}
 	}
 
