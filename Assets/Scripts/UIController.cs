@@ -5,19 +5,19 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour {
 	private readonly List<Selectable> _toDisableInBuildMode = new List<Selectable>();
 
-	public Button playButton;
-	public Button levelButton;
-	public Button editButton;
-	public Toggle participation;
 	public Slider timeSpeed;
+	public Button playButton;
+	public Toggle participation;
+	public InputField levelField;
+	public Button editButton;
 
 	public TrackMaker trackMaker;
 	bool inBuildMode = false;
 	public SimpleGameManager gameManager;
 
-	public CanvasGroup menu;
-	public CanvasGroup buildShortcuts;
-	public CanvasGroup playButtonGroup;
+	public RectTransform menu;
+	public RectTransform buildShortcuts;
+	public RectTransform playButtonGroup;
 
 	void Start() {
 		_toDisableInBuildMode.AddRange(new Selectable[]
@@ -42,35 +42,35 @@ public class UIController : MonoBehaviour {
 		gameManager.EnterPlayMode(participation.isOn);
 	}
 
+	public void LoadLevel() {
+		trackMaker.BuildTrack(int.Parse(levelField.text));
+	}
+
 	public void ToggleBuildMode() {
 		inBuildMode = !inBuildMode;
 		if (inBuildMode) {
-			DisplayUiForBuildMode();
 			trackMaker.EnterBuildMode();
 		} else {
-			HideUiForBuildMode();
 			trackMaker.LeaveBuildMode();
 		}
 	}
 
-	private void DisplayUiForBuildMode() {
+	private void DisplayUI() {
 		foreach (var input in _toDisableInBuildMode) {
 			input.enabled = false;
 		}
 
-		menu.alpha = 0;
-		menu.interactable = false;
+		menu.gameObject.SetActive(false);
 
 		//buildShortcuts.alpha = 1;
 	}
 
-	private void HideUiForBuildMode() {
+	private void HideUI() {
 		foreach (var input in _toDisableInBuildMode) {
 			input.enabled = true;
 		}
 
-		menu.alpha = 1;
-		menu.interactable = true;
+		menu.gameObject.SetActive(true);
 
 		//buildShortcuts.alpha = 0;
 	}

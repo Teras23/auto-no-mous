@@ -53,10 +53,12 @@ public class TrackMaker : MonoBehaviour {
 		}
 	}
 
-	void BuildTrack(int trackNumber) {
-		RemoveAll();
-		foreach (Vector2 point in tracks[trackNumber].points) {
-			PlaceNew(point.x, point.y);
+	public void BuildTrack(int trackNumber) {
+		if (trackNumber >= 0 && trackNumber < tracks.Length) {
+			RemoveAll();
+			foreach (Vector2 point in tracks[trackNumber].points) {
+				PlaceNew(point.x, point.y);
+			}
 		}
 	}
 
