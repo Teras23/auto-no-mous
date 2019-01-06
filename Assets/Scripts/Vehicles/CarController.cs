@@ -75,9 +75,9 @@ public class CarController : MonoBehaviour {
 		float realTurn = turn * maxTurn;
 		rb.rotation -= Vector2.Dot(rb.velocity, direction) * (Mathf.Tan(realTurn) + Mathf.Sin(realTurn)) * 0.17f * Mathf.Rad2Deg * Time.fixedDeltaTime;
 
-		//Air resistance for an air density of 1.2kg/m^3, frontal area of 2m^2, mass of 2 tons, and a drag coefficient of 0.3
-		//(0.3 * 1.2 * v^2 * 2) / (2 * 2000) = 0.00018v^2
-		accelerationVector -= 0.00018f * rb.velocity.magnitude * rb.velocity;
+		//Air resistance for an air density of 1.2kg/m^3, average cross-section of 2.5m^2, mass of 2 tons, and a drag coefficient of 0.3
+		//(0.3 * 1.2 * v^2 * 2.5) / (2 * 2000) = 0.000225v^2
+		accelerationVector -= 0.000225f * rb.velocity.magnitude * rb.velocity;
 
 		//Anti-drift friction
 		float antiDriftAcceleration;

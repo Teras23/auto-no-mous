@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TrackMaker : MonoBehaviour {
@@ -8,9 +9,62 @@ public class TrackMaker : MonoBehaviour {
 	public int segmentCount;
 	Stack<TrackSegment> pieceHistory = new Stack<TrackSegment>();
 	float x, y, ax = 10, bx, cx = -10, ay, by, cy;
+	Camera cam;
 	int checkpointCounter = 1;
+	//This is a hack solution, but it's so much better to do this stuff in the editor
+	[System.Serializable]
+	struct Track {
+		public Vector2[] points;
+	}
 
-	protected void PlaceNew(float x1, float y1) {
+	[SerializeField]
+	#pragma warning disable IDE0044 //Add readonly modifier
+	Track[] tracks;
+	#pragma warning restore IDE0044 //Add readonly modifier
+
+	void Awake() {
+		cam = Camera.main;
+	}
+
+	public void EnterBuildMode() {
+		MousePlace();
+		StartCoroutine(BuildMode());
+	}
+
+	public void LeaveBuildMode() {
+		StopAllCoroutines();
+		Remove();
+	}
+
+	IEnumerator BuildMode() {
+		while (true) {
+			if (!Input.GetButtonDown("Fire1")) {
+				Remove();
+			}
+			if (!Input.GetButtonDown("Cancel")) {
+				MousePlace();
+			}
+			yield return null;
+		}
+	}
+
+	void BuildTrack(int trackNumber) {
+		RemoveAll();
+		foreach (Vector2 point in tracks[trackNumber].points) {
+			PlaceNew(point.x, point.y);
+		}
+	}
+
+	void MousePlace() {
+		//Find coordinate on plane
+		Ray forward = cam.ScreenPointToRay(Input.mousePosition);
+		new Plane(Vector3.back, Vector3.zero).Raycast(forward, out float distance);
+		Vector3 mouseLoc = forward.origin + forward.direction * distance;
+		Debug.Log(mouseLoc); //TODO: Create pre-built tracks from these locations
+		PlaceNew(mouseLoc.x, mouseLoc.y);
+	}
+
+	void PlaceNew(float x1, float y1) {
 		//Create a new piece
 		float xSlope = FindSlope(ax, bx, 1);
 		float ySlope = FindSlope(ay, by, 1);
@@ -100,7 +154,7 @@ public class TrackMaker : MonoBehaviour {
 		y = y1;
 	}
 
-	protected void Remove() {
+	void Remove() {
 		//Destroy the last piece on the stack and revert to the values before that
 		if (pieceHistory.Count > 0) {
 			TrackSegment lastPiece = pieceHistory.Pop();
@@ -124,7 +178,7 @@ public class TrackMaker : MonoBehaviour {
 		cy = 0;
 	}
 
-	protected void RemoveAll() {
+	void RemoveAll() {
 		while (pieceHistory.Count > 0) {
 			Remove();
 		}
