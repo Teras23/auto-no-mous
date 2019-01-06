@@ -6,28 +6,22 @@ using Random = System.Random;
 public class SimpleGameManager : MonoBehaviour {
 	private GameObject[] _cars;
 	private GameObject _playerCar;
-	private bool _inGame;
 	private bool started = false;
-	private int generation = 1;
+	public int generation = 1;
 
-	[SerializeField]
-	private GameObject _aiCarPrefab;
-
-	[SerializeField]
-	private GameObject _playerCarPrefab;
-
-	[SerializeField]
+	public GameObject _aiCarPrefab;
+	public GameObject _playerCarPrefab;
 	public int nrOfCars = 10;
 
 	public static float maxRayLength = 10;
 
 	[SerializeField]
 	private TrackMaker _trackMaker;
-	
+
 	/// <summary>
 	/// Used by UI controller
 	/// </summary>
-	public bool InGame => _inGame;
+	public bool InGame { get; private set; }
 
 	// Start is called before the first frame update
 	void Start() {
@@ -54,7 +48,7 @@ public class SimpleGameManager : MonoBehaviour {
 	/// Used by UI controller
 	/// </summary>
 	public void EnterPlayMode(bool includePlayer = false) {
-		_inGame = true;
+		InGame = true;
 
 		if (includePlayer) {
 			_playerCar = Instantiate(_playerCarPrefab);
@@ -69,7 +63,7 @@ public class SimpleGameManager : MonoBehaviour {
 	/// Used by UI controller
 	/// </summary>
 	public void LeavePlayMode() {
-		_inGame = false;
+		InGame = false;
 		started = false;
 		ClearCars();
 	}

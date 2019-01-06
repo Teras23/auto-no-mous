@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 public class CarController : MonoBehaviour {
 	public float maxAcc, maxTurn, wheelFriction;
@@ -42,10 +43,13 @@ public class CarController : MonoBehaviour {
 
 	void FixedUpdate() {
 		if (AI) {
-			double[] results = neuralNetwork.Calculate(System.Array.ConvertAll<Vector2, double>(sensorDirections, direction => {
+			List<double> inputs = new List<double>(System.Array.ConvertAll<Vector2, double>(sensorDirections, direction => {
 				RaycastHit2D hit = Physics2D.Raycast(rb.position, rb.GetRelativeVector(direction), float.PositiveInfinity, LayerMask.GetMask("Wall"));
 				return hit ? hit.distance : float.MaxValue;
 			}));
+			inputs.Add(Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.right)));
+			inputs.Add(Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.down)));
+			double[] results = neuralNetwork.Calculate(inputs.ToArray());
 			ControlVehicle((float) results[0], (float) results[1]);
 
 			//Stop car if it has not gone through any checkpoint for 3 seconds

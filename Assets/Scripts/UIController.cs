@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour {
 	public Toggle participation;
 	public InputField levelField;
 	public Button editButton;
+    public Text generationText;
 
 	public TrackMaker trackMaker;
 	bool inBuildMode = false;
@@ -30,7 +31,9 @@ public class UIController : MonoBehaviour {
 		if (Input.GetButtonDown("Play")) {
 			TogglePlayMode();
 		}
-	}
+
+        generationText.text = $"Generation: {gameManager.generation}";
+    }
 
 	public void TogglePlayMode() {
 		if (!inBuildMode) {
@@ -60,10 +63,10 @@ public class UIController : MonoBehaviour {
 	public void ToggleBuildMode() {
 		inBuildMode = !inBuildMode;
 		if (inBuildMode) {
-            playButton.GetComponentInChildren<Text>().text = "Save changes";
+            editButton.GetComponentInChildren<Text>().text = "Save changes";
             trackMaker.EnterBuildMode();
 		} else {
-            playButton.GetComponentInChildren<Text>().text = "Custom track";
+            editButton.GetComponentInChildren<Text>().text = "Custom track";
             trackMaker.LeaveBuildMode();
 		}
 	}
