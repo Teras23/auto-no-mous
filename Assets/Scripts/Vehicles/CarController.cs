@@ -10,11 +10,12 @@ public class CarController : MonoBehaviour {
 	public float TotalTime => lastTime - startTime;
 	//AI Driving
 	public float[] sensorAngles;
-	public Vector2[] sensorDirections;
+	Vector2[] sensorDirections;
 	NeuralNetwork neuralNetwork;
 
 	void Start() {
 		rb = GetComponent<Rigidbody2D>();
+		neuralNetwork = GetComponent<NeuralNetwork>();
 		maxTurn *= Mathf.Deg2Rad;
 		wheelFriction *= 10;
 		startTime = Time.time;
@@ -23,7 +24,6 @@ public class CarController : MonoBehaviour {
 		for (int i = 0; i < sensorAngles.Length; i++) {
 			sensorDirections[i] = new Vector2(Mathf.Cos(sensorAngles[i] * Mathf.Deg2Rad), -Mathf.Sin(sensorAngles[i] * Mathf.Deg2Rad));
 		}
-		neuralNetwork = GetComponent<NeuralNetwork>();
 	}
 
 	void OnTriggerEnter2D(Collider2D collision) {

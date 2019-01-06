@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class TrackMaker : MonoBehaviour {
@@ -9,47 +8,9 @@ public class TrackMaker : MonoBehaviour {
 	public int segmentCount;
 	Stack<TrackSegment> pieceHistory = new Stack<TrackSegment>();
 	float x, y, ax = 10, bx, cx = -10, ay, by, cy;
-	Camera cam;
 	int checkpointCounter = 1;
-	bool inBuildMode = false;
 
-	void Awake() {
-		cam = Camera.main;
-	}
-
-	void Update() {
-		if (Input.GetButtonDown("EnterBuildMode")) {
-			if (inBuildMode) {
-				StopAllCoroutines();
-				Remove();
-			} else {
-				PlaceNew();
-				StartCoroutine(BuildMode());
-			}
-			inBuildMode = !inBuildMode;
-		}
-	}
-
-	IEnumerator BuildMode() {
-		while (true) {
-			if (!Input.GetButtonDown("Fire1")) {
-				Remove();
-			}
-			if (!Input.GetButtonDown("Cancel")) {
-				PlaceNew();
-			}
-			yield return null;
-		}
-	}
-
-	void PlaceNew() {
-		//Find coordinate on plane
-		Ray forward = cam.ScreenPointToRay(Input.mousePosition);
-		new Plane(Vector3.back, Vector3.zero).Raycast(forward, out float distance);
-		Vector3 mouseLoc = forward.origin + forward.direction * distance;
-		float x1 = mouseLoc.x;
-		float y1 = mouseLoc.y;
-
+	protected void PlaceNew(float x1, float y1) {
 		//Create a new piece
 		float xSlope = FindSlope(ax, bx, 1);
 		float ySlope = FindSlope(ay, by, 1);
@@ -139,7 +100,7 @@ public class TrackMaker : MonoBehaviour {
 		y = y1;
 	}
 
-	public void Remove() {
+	protected void Remove() {
 		//Destroy the last piece on the stack and revert to the values before that
 		if (pieceHistory.Count > 0) {
 			TrackSegment lastPiece = pieceHistory.Pop();
@@ -161,6 +122,12 @@ public class TrackMaker : MonoBehaviour {
 		ay = 0;
 		by = 0;
 		cy = 0;
+	}
+
+	protected void RemoveAll() {
+		while (pieceHistory.Count > 0) {
+			Remove();
+		}
 	}
 
 	void FindLeftEdges(float x, float y, float xSlope, float ySlope, out Vector2 collider, out Vector3 outerWall, out Vector3 innerWall) {
