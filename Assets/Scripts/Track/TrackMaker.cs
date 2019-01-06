@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TrackMaker : MonoBehaviour {
+public class TrackMaker : MonoBehaviour
+{
+    private bool _inBuildMode;
+    public bool InBuildMode => _inBuildMode;
 	public TrackSegment segment;
 	public Checkpoint checkpoint;
 	public float trackWidth, wallWidth, checkpointWidth;
@@ -26,13 +29,17 @@ public class TrackMaker : MonoBehaviour {
 		cam = Camera.main;
 	}
 
-	public void EnterBuildMode() {
+	public void EnterBuildMode()
+    {
+        _inBuildMode = true;
 		MousePlace();
 		StartCoroutine(BuildMode());
 	}
 
-	public void LeaveBuildMode() {
-		StopAllCoroutines();
+	public void LeaveBuildMode()
+    {
+        _inBuildMode = false;
+        StopAllCoroutines();
 		Remove();
 	}
 

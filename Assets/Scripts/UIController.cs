@@ -4,8 +4,6 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    private CustomTrackMaker _customTrackMaker;
-    private SimpleGameManager _gameManager;
     private readonly List<Selectable> _toDisableInBuildMode = new List<Selectable>();
 
     public Button playButton;
@@ -14,14 +12,15 @@ public class UIController : MonoBehaviour
     public Toggle participation;
     public Slider timeSpeed;
 
+    public TrackMaker trackMaker;
+    public SimpleGameManager gameManager;
+
+    public CanvasGroup menu;
     public CanvasGroup buildShortcuts;
     public CanvasGroup playButtonGroup;
 
     void Start()
     {
-        _customTrackMaker = FindObjectOfType<CustomTrackMaker>();
-        _gameManager = FindObjectOfType<SimpleGameManager>();
-
         playButton.onClick.AddListener(EnterPlayMode);
         levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
         editButton.onClick.AddListener(EnterBuildMode);
@@ -34,12 +33,12 @@ public class UIController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButtonDown("Play") && !_customTrackMaker.InBuildMode)
+        if (gameManager != null && Input.GetButtonDown("Play") && !trackMaker.InBuildMode)
         {
-            if (_gameManager.InGame)
+            if (gameManager.InGame)
             {
                 // HideUiForPlayMode()
-                _gameManager.LeavePlayMode();
+                gameManager.LeavePlayMode();
             }
             else
             {
@@ -47,12 +46,12 @@ public class UIController : MonoBehaviour
             }
         }
 
-        if (Input.GetButtonDown("EnterBuildMode") && !_gameManager.InGame)
+        if (Input.GetButtonDown("EnterBuildMode") && (gameManager == null || !gameManager.InGame))
         {
-            if (_customTrackMaker.InBuildMode)
+            if (trackMaker.InBuildMode)
             {
                 HideUiForBuildMode();
-                _customTrackMaker.CommitAndLeaveBuildMode();
+                trackMaker.LeaveBuildMode();
             }
             else
             {
@@ -65,7 +64,7 @@ public class UIController : MonoBehaviour
     {
         // ShowPlayModeInputs()
 
-        _gameManager.EnterPlayMode(participation.isOn);
+        gameManager.EnterPlayMode(participation.isOn);
     }
 
     private void DisplayLevelSelectionMenu()
@@ -76,7 +75,7 @@ public class UIController : MonoBehaviour
     private void EnterBuildMode()
     {
         DisplayUiForBuildMode();
-        _customTrackMaker.EnterBuildMode();
+        trackMaker.EnterBuildMode();
     }
 
 
@@ -88,7 +87,6 @@ public class UIController : MonoBehaviour
             input.enabled = false;
         }
 
-        var menu = GetComponent<CanvasGroup>();
         menu.alpha = 0;
         menu.interactable = false;
 
@@ -102,7 +100,6 @@ public class UIController : MonoBehaviour
             input.enabled = true;
         }
 
-        var menu = GetComponent<CanvasGroup>();
         menu.alpha = 1;
         menu.interactable = true;
 

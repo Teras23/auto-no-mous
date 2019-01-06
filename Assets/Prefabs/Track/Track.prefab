@@ -41,16 +41,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 2627347450279159808}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6f7f8baf4fa70aa4797ffee942f693bd, type: 3}
+  m_Script: {fileID: 11500000, guid: 9437c3ba139b8a84289f74c6935aced0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  segment: {fileID: 6495660403446902247, guid: 49c0797892d59c24ea8c1082abb06bbb, type: 3}
-  checkpoint: {fileID: 2190176050586185444, guid: c63955ebc60b91e488864e101184b627,
-    type: 3}
-  trackWidth: 6.5
-  wallWidth: 0.5
-  checkpointWidth: 0.05
-  segmentCount: 12
+  segment: {fileID: 0}
+  checkpoint: {fileID: 0}
+  trackWidth: 0
+  wallWidth: 0
+  checkpointWidth: 0
+  segmentCount: 0
+  tracks: []
 --- !u!1 &2752467276780496419
 GameObject:
   m_ObjectHideFlags: 0
