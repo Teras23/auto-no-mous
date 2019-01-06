@@ -12,7 +12,7 @@ public class TrackMaker : MonoBehaviour {
 	float x, y, ax = 10, bx, cx = -10, ay, by, cy;
 	Camera cam;
 	EventSystem eventSystem;
-	int checkpointCounter = 1;
+	public int checkpointCounter = 1;
 	//This is a hack solution, but it's so much better to do this stuff in the editor
 	[System.Serializable]
 	struct Track {
