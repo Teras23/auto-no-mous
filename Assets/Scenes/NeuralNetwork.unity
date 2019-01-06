@@ -248,6 +248,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2602717322284562497, guid: 6d14318299507614bb01e7ff4969f191,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 163.55078
+      objectReference: {fileID: 0}
+    - target: {fileID: 2602717322284562500, guid: 6d14318299507614bb01e7ff4969f191,
+        type: 3}
+      propertyPath: customTrackMaker
+      value: 
+      objectReference: {fileID: 901448070}
+    - target: {fileID: 2602717322284562500, guid: 6d14318299507614bb01e7ff4969f191,
+        type: 3}
+      propertyPath: gameManager
+      value: 
+      objectReference: {fileID: 1794627828}
     - target: {fileID: 2854381287125468896, guid: 6d14318299507614bb01e7ff4969f191,
         type: 3}
       propertyPath: m_AnchorMax.y
@@ -260,6 +275,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d14318299507614bb01e7ff4969f191, type: 3}
+--- !u!114 &901448070 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2321346184040110146, guid: 343e9e1970db70146991f7b4ef531978,
+    type: 3}
+  m_PrefabInstance: {fileID: 1333992068}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6f7f8baf4fa70aa4797ffee942f693bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1333992068
 PrefabInstance:
   m_ObjectHideFlags: 0

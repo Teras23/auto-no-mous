@@ -3,24 +3,40 @@ using UnityEngine;
 
 public class CustomTrackMaker : TrackMaker {
 	Camera cam;
-	bool inBuildMode = false;
+    private bool inBuildMode;
+
+    public bool InBuildMode => inBuildMode;
 
 	void Awake() {
 		cam = Camera.main;
 	}
 
-	void Update() {
-		if (Input.GetButtonDown("EnterBuildMode")) {
-			if (inBuildMode) {
-				StopAllCoroutines();
-				Remove();
-			} else {
-				MousePlace();
-				StartCoroutine(BuildMode());
-			}
-			inBuildMode = !inBuildMode;
-		}
-	}
+    public void EnterBuildMode()
+    {
+        inBuildMode = !inBuildMode;
+        MousePlace();
+        StartCoroutine(BuildMode());
+    }
+
+    public void CommitAndLeaveBuildMode()
+    {
+        inBuildMode = !inBuildMode;
+        StopAllCoroutines();
+        Remove();
+    }
+
+	//void Update() {
+	//	if (Input.GetButtonDown("EnterBuildMode")) {
+	//		if (inBuildMode) {
+	//			StopAllCoroutines();
+	//			Remove();
+	//		} else {
+	//			MousePlace();
+	//			StartCoroutine(BuildMode());
+	//		}
+	//		inBuildMode = !inBuildMode;
+	//	}
+	//}
 
 	IEnumerator BuildMode() {
 		while (true) {
