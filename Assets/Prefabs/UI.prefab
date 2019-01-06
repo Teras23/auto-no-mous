@@ -767,7 +767,6 @@ GameObject:
   - component: {fileID: 7430040121310462284}
   - component: {fileID: 5821735715728929449}
   - component: {fileID: 7050231866224463824}
-  - component: {fileID: 6129712360863024027}
   m_Layer: 5
   m_Name: MenuPanel
   m_TagString: Untagged
@@ -848,28 +847,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6129712360863024027
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3449809718583663877}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6edc40c44cb81b14099b5367a267afb1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  playButton: {fileID: 6481247208289917905}
-  levelButton: {fileID: 957940593971565268}
-  editButton: {fileID: 957948514699144916}
-  participation: {fileID: 3122148375541772540}
-  timeSpeed: {fileID: 4388515676565128892}
-  trackMaker: {fileID: 0}
-  gameManager: {fileID: 0}
-  menu: {fileID: 0}
-  buildShortcuts: {fileID: 0}
-  playButtonGroup: {fileID: 0}
 --- !u!1 &3732855678904444274
 GameObject:
   m_ObjectHideFlags: 0
@@ -1702,7 +1679,6 @@ MonoBehaviour:
   participation: {fileID: 3122148375541772540}
   timeSpeed: {fileID: 4388515676565128892}
   trackMaker: {fileID: 0}
-  gameManager: {fileID: 0}
   menu: {fileID: 7050231866224463824}
   buildShortcuts: {fileID: 0}
   playButtonGroup: {fileID: 0}

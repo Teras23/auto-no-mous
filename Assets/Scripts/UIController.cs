@@ -4,21 +4,24 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
 	private readonly List<Selectable> _toDisableInBuildMode = new List<Selectable>();
+    private SimpleGameManager _gameManager;
 
-	public Button playButton;
+    public Button playButton;
 	public Button levelButton;
 	public Button editButton;
 	public Toggle participation;
 	public Slider timeSpeed;
 
 	public TrackMaker trackMaker;
-	public SimpleGameManager gameManager;
 
 	public CanvasGroup menu;
 	public CanvasGroup buildShortcuts;
 	public CanvasGroup playButtonGroup;
 
-	void Start() {
+	void Start()
+    {
+        _gameManager = GetComponent<SimpleGameManager>();
+
 		playButton.onClick.AddListener(EnterPlayMode);
 		levelButton.onClick.AddListener(DisplayLevelSelectionMenu);
 		editButton.onClick.AddListener(EnterBuildMode);
@@ -30,16 +33,16 @@ public class UIController : MonoBehaviour {
 	}
 
 	void Update() {
-		if (gameManager != null && Input.GetButtonDown("Play") && !trackMaker.InBuildMode) {
-			if (gameManager.InGame) {
+		if (_gameManager != null && Input.GetButtonDown("Play") && !trackMaker.InBuildMode) {
+			if (_gameManager.InGame) {
 				// HideUiForPlayMode()
-				gameManager.LeavePlayMode();
+				_gameManager.LeavePlayMode();
 			} else {
 				EnterPlayMode();
 			}
 		}
 
-		if (Input.GetButtonDown("EnterBuildMode") && (gameManager == null || !gameManager.InGame)) {
+		if (Input.GetButtonDown("EnterBuildMode") && (_gameManager == null || !_gameManager.InGame)) {
 			if (trackMaker.InBuildMode) {
 				HideUiForBuildMode();
 				trackMaker.LeaveBuildMode();
@@ -52,7 +55,7 @@ public class UIController : MonoBehaviour {
 	private void EnterPlayMode() {
 		// ShowPlayModeInputs()
 
-		gameManager.EnterPlayMode(participation.isOn);
+		_gameManager.EnterPlayMode(participation.isOn);
 	}
 
 	private void DisplayLevelSelectionMenu() {
@@ -74,7 +77,7 @@ public class UIController : MonoBehaviour {
 		menu.alpha = 0;
 		menu.interactable = false;
 
-		buildShortcuts.alpha = 1;
+		//buildShortcuts.alpha = 1;
 	}
 
 	private void HideUiForBuildMode() {
@@ -85,6 +88,6 @@ public class UIController : MonoBehaviour {
 		menu.alpha = 1;
 		menu.interactable = true;
 
-		buildShortcuts.alpha = 0;
+		//buildShortcuts.alpha = 0;
 	}
 }
