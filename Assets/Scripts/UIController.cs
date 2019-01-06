@@ -20,8 +20,6 @@ public class UIController : MonoBehaviour {
 	public RectTransform playButtonGroup;
 
 	void Start() {
-        playButton.onClick.AddListener(TogglePlayMode);
-
 		_toDisableInBuildMode.AddRange(new Selectable[]
 		{
 			playButton, editButton, participation, timeSpeed
@@ -34,32 +32,26 @@ public class UIController : MonoBehaviour {
 		}
 	}
 
-    private void TogglePlayMode()
-    {
-        if (gameManager != null && !inBuildMode)
-        {
-            if (gameManager.InGame)
-            {
-                LeavePlayMode();
-            }
-            else
-            {
-                EnterPlayMode();
-            }
-        }
-    }
-
-	private void EnterPlayMode() {
-        // ShowPlayModeInputs()
-        playButton.GetComponentInChildren<Text>().text = "Stop";
-        gameManager.EnterPlayMode(participation.isOn);
+	public void TogglePlayMode() {
+		if (!inBuildMode) {
+			if (gameManager.InGame) {
+				LeavePlayMode();
+			} else {
+				EnterPlayMode();
+			}
+		}
 	}
 
-    private void LeavePlayMode()
-    {
-        playButton.GetComponentInChildren<Text>().text = "Race";
-        gameManager.LeavePlayMode();
-    }
+	private void EnterPlayMode() {
+		// ShowPlayModeInputs()
+		playButton.GetComponentInChildren<Text>().text = "Stop";
+		gameManager.EnterPlayMode(participation.isOn);
+	}
+
+	private void LeavePlayMode() {
+		playButton.GetComponentInChildren<Text>().text = "Race";
+		gameManager.LeavePlayMode();
+	}
 
 	public void LoadLevel() {
 		trackMaker.BuildTrack(int.Parse(levelField.text));
