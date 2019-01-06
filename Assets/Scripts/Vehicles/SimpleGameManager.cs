@@ -3,18 +3,27 @@ using UnityEngine;
 
 public class SimpleGameManager : MonoBehaviour
 {
-    [SerializeField] public GameObject carPrefab;
+    private GameObject[] _cars;
+    private GameObject _playerCar;
+    private bool _inGame;
+    private bool started = false;
+    private int generation = 1;
 
-    [SerializeField] public int nrOfCars = 10;
+    [SerializeField]
+    private GameObject _aiCarPrefab;
 
-    [SerializeField] public bool includeManual;
+    [SerializeField]
+    private GameObject _playerCarPrefab;
+
+    [SerializeField]
+    public int nrOfCars = 10;
 
     public static float maxRayLength = 10;
 
-    private GameObject[] _cars;
-
-    private bool started = false;
-    private int generation = 1;
+    /// <summary>
+    /// Used by UI controller
+    /// </summary>
+    public bool InGame => _inGame;
 
     // Start is called before the first frame update
     void Start()
@@ -25,12 +34,6 @@ public class SimpleGameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetButtonDown("Play"))
-        {
-            ClearCars();
-            SpawnCars();
-        }
-
         var allFinished = true;
 
         foreach (var car in _cars)
@@ -48,8 +51,42 @@ public class SimpleGameManager : MonoBehaviour
         }
     }
 
+
+    /// <summary>
+    /// Used by UI controller
+    /// </summary>
+    public void EnterPlayMode(bool includePlayer = false)
+    {
+        _inGame = true;
+
+        if (includePlayer)
+        {
+            _playerCar = GameObject.Instantiate(_playerCarPrefab);
+        }
+
+        ClearCars();
+        SpawnCars();
+    }
+
+
+    /// <summary>
+    /// Used by UI controller
+    /// </summary>
+    public void LeavePlayMode()
+    {
+        _inGame = false;
+        started = false;
+        ClearCars();
+    }
+
     public void ClearCars()
     {
+        if (_playerCar != null)
+        {
+            Destroy(_playerCar);
+            _playerCar = null;
+        }
+
         for (var i = 0; i < _cars.Length; i++)
         {
             if (_cars[i] != null)
@@ -64,8 +101,7 @@ public class SimpleGameManager : MonoBehaviour
     {
         for (var i = 0; i < nrOfCars; i++)
         {
-            var car = Instantiate(carPrefab);
-            car.GetComponent<CarController>().AI = true;
+            var car = Instantiate(_aiCarPrefab);
             _cars[i] = car;
         }
 
