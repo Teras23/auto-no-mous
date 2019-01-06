@@ -4,45 +4,72 @@ public class CameraController : MonoBehaviour {
 	enum CameraMode {
 		Disabled,
 		Flat,
-		Free,
 		Follow
 	}
 
 	CameraMode cameraMode = CameraMode.Flat;
+	CameraMode oldCameraMode = CameraMode.Flat;
 	public float speed, rotSpeed;
-	public GameObject canvas;
+	GameObject player;
+
+	void Start() {
+		player = GameObject.FindGameObjectWithTag("Player");
+	}
 
 	void Update() {
 		switch (cameraMode) {
 			case CameraMode.Flat:
 				transform.Translate(new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"), Input.GetAxisRaw("UpDown")) * (Time.unscaledDeltaTime * speed));
 				break;
-			case CameraMode.Free:
-				transform.Translate(new Vector3(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("UpDown"), Input.GetAxisRaw("Vertical")) * (Time.unscaledDeltaTime * speed));
-				transform.Rotate(Vector3.right * rotSpeed * -Input.GetAxisRaw("Mouse Y"));
-				transform.Rotate(Vector3.up * rotSpeed * Input.GetAxisRaw("Mouse X"), Space.World);
+			case CameraMode.Follow:
+				//TODO: Follow best car
+				/*
+				if (player == null && transform.parent != currentLead) {
+					transform.SetParent(currentLead, false);
+				}
+				*/
+				transform.Translate(new Vector3(0, 0, Input.GetAxisRaw("Vertical")) * (Time.unscaledDeltaTime * speed * 0.1f));
+				float rotAmount = Time.unscaledDeltaTime * rotSpeed * 60;
+				transform.RotateAround(transform.parent.position, transform.TransformDirection(Vector3.right), Input.GetAxisRaw("UpDown") * rotAmount);
+				transform.RotateAround(transform.parent.position, Vector3.back, Input.GetAxisRaw("Horizontal") * rotAmount);
 				break;
 		}
 
 		if (Input.GetButtonDown("ChangeCamera")) {
 			switch (cameraMode) {
-				case CameraMode.Disabled:
-					cameraMode = CameraMode.Flat;
-					transform.localRotation = Quaternion.identity;
-					break;
 				case CameraMode.Flat:
-					cameraMode = CameraMode.Free;
-					Cursor.lockState = CursorLockMode.Locked;
-					Cursor.visible = false;
-					canvas.SetActive(false);
+					cameraMode = CameraMode.Follow;
 					break;
-				case CameraMode.Free:
-					cameraMode = CameraMode.Disabled;
-					Cursor.lockState = CursorLockMode.None;
-					Cursor.visible = true;
-					canvas.SetActive(true);
+				case CameraMode.Follow:
+					cameraMode = CameraMode.Flat;
 					break;
 			}
+			SwitchMode();
+		}
+
+		if (Input.GetButtonDown("LockCamera")) {
+			if (cameraMode != CameraMode.Disabled) {
+				oldCameraMode = cameraMode;
+				cameraMode = CameraMode.Disabled;
+			} else {
+				cameraMode = oldCameraMode;
+			}
+			SwitchMode();
+		}
+	}
+
+	void SwitchMode() {
+		switch (cameraMode) {
+			case CameraMode.Flat:
+				transform.parent = null;
+				transform.localPosition = new Vector3(0, 0, -100);
+				transform.localRotation = Quaternion.identity;
+				break;
+			case CameraMode.Follow:
+				transform.parent = player.transform;
+				transform.localPosition = new Vector3(-Mathf.Sqrt(75), 0, -5);
+				transform.localRotation = Quaternion.Euler(0, 60, -90);
+				break;
 		}
 	}
 }
