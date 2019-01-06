@@ -52,7 +52,6 @@ public class UIController : MonoBehaviour {
 
 	private void EnterPlayMode() {
 		// ShowPlayModeInputs()
-
 		gameManager.EnterPlayMode(participation.isOn);
 	}
 
@@ -75,7 +74,7 @@ public class UIController : MonoBehaviour {
 		menu.alpha = 0;
 		menu.interactable = false;
 
-		buildShortcuts.alpha = 1;
+		//buildShortcuts.alpha = 1;
 	}
 
 	private void HideUiForBuildMode() {
@@ -86,6 +85,6 @@ public class UIController : MonoBehaviour {
 		menu.alpha = 1;
 		menu.interactable = true;
 
-		buildShortcuts.alpha = 0;
+		//buildShortcuts.alpha = 0;
 	}
 }
