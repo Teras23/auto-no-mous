@@ -10,6 +10,7 @@ public class UIController : MonoBehaviour {
     public Text generationText;
     public Text bestTimeText;
     public Text bestScoreText;
+    public Text carsFinishedText;
 	public Text collapseButtonText;
 
 	public TrackMaker trackMaker;
@@ -19,7 +20,7 @@ public class UIController : MonoBehaviour {
 
 	public RectTransform menu;
 
-	public void UpdateInfoPanel(int genNr, CarController bestCar)
+	public void UpdateInfoPanel(int genNr, CarController bestCar, int nrCompleted)
     {
         generationText.text = $"Generation: {genNr}";
         if (genNr > 1)
@@ -30,6 +31,13 @@ public class UIController : MonoBehaviour {
 
             bestScoreText.text = $"Best score: {scoreText}";
             bestTimeText.text = $"Best time: {timeText}";
+            carsFinishedText.text = $"Cars finished: {nrCompleted}/{gameManager.nrOfCars}";
+        }
+        else
+        {
+            bestScoreText.text = "Best score: -";
+            bestTimeText.text = "Best time: -";
+            carsFinishedText.text = "Cars finished: -";
         }
 
 	}
