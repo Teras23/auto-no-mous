@@ -141,7 +141,6 @@ public class GameManager : MonoBehaviour {
 		cars[cars.Length - 1].GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
 
 		generation++;
-        var nrCompleted = lastCars.Count(x => x.GetComponent<CarController>().points > trackMaker.checkpointCounter);
-        UIController.UpdateInfoPanel(generation, lastCars[0].GetComponent<CarController>(), nrCompleted);
+        UIController.UpdateInfoPanel(generation, lastCars[0].GetComponent<CarController>());
 	}
 }
