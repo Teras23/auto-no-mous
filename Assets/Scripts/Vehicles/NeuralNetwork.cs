@@ -97,9 +97,9 @@ public class NeuralNetwork : MonoBehaviour {
 					if (choice < 0.005) { //Sign change
 						newWeight[r, c] = -network1.weights[i][r, c];
 					} else if (choice < 0.02) { //Additive noise
-						newWeight[r, c] = network1.weights[i][r, c] + rng.NextDouble() * 2 - 1;
+						newWeight[r, c] = network1.weights[i][r, c] + rng.NextDouble() * 1.5 - 0.5;
 					} else if (choice < 0.035) { //Multiplicative noise
-						newWeight[r, c] = network1.weights[i][r, c] * (rng.NextDouble() + 0.5);
+						newWeight[r, c] = network1.weights[i][r, c] * (rng.NextDouble() * 1.5 + 0.5);
 					} else if (choice < 0.06) { //Keep the new random
 
 					} else { //Keep the old one
@@ -118,9 +118,9 @@ public class NeuralNetwork : MonoBehaviour {
 				if (choice < 0.005) { //Sign change
 					newBias[c] = -network1.biases[i][c];
 				} else if (choice < 0.02) { //Additive noise
-					newBias[c] = network1.biases[i][c] + rng.NextDouble() * 2 - 1;
+					newBias[c] = network1.biases[i][c] + rng.NextDouble() * 1.5 - 0.5;
 				} else if (choice < 0.035) { //Multiplicative noise
-					newBias[c] = network1.biases[i][c] * (rng.NextDouble() + 0.5);
+					newBias[c] = network1.biases[i][c] * (rng.NextDouble() * 1.5 + 0.5);
 				} else if (choice < 0.06) { //Keep the new random
 
 				} else { //Keep the old one

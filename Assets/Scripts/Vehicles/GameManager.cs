@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void EnterPlayMode() {
+		generation = 1;
 		inGame = true;
 		ClearCars();
 		SpawnCars();
@@ -78,8 +79,8 @@ public class GameManager : MonoBehaviour {
 
 	const float Elite = 0.1f;
 	const float Newbie = 0.2f;
-	const float FullCross = 0.45f;
-	const float LinearCross = 0.7f;
+	const float FullCross = 0.4f;
+	const float LinearCross = 0.6f;
 
 	void SpawnNewCars() {
 		CarController[] lastCars = System.Array.ConvertAll(cars, car => car.GetComponent<CarController>());
@@ -95,7 +96,7 @@ public class GameManager : MonoBehaviour {
 				}
 			}
 		});
-		System.Array.Resize(ref lastCars, Mathf.RoundToInt(Elite * 2 * nrOfCars));
+		System.Array.Resize(ref lastCars, Mathf.RoundToInt(Elite * 4 * nrOfCars));
 
 		UIController.UpdateInfoPanel(generation++, lastCars[0]);
 
