@@ -10,7 +10,6 @@ public class UIController : MonoBehaviour {
     public Text generationText;
     public Text bestTimeText;
     public Text bestScoreText;
-    public Text bestCarText;
 	public Text collapseButtonText;
 
 	public TrackMaker trackMaker;
@@ -31,7 +30,6 @@ public class UIController : MonoBehaviour {
 
             bestScoreText.text = $"Best score: {scoreText}";
             bestTimeText.text = $"Best time: {timeText}";
-            bestCarText.text = bestCar.name;
         }
 
 	}
