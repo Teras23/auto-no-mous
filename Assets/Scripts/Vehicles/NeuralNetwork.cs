@@ -93,9 +93,8 @@ public class NeuralNetwork : MonoBehaviour {
 
 			for (var r = 0; r < newWeight.RowCount; r++) {
 				for (var c = 0; c < newWeight.ColumnCount; c++) {
-					newWeight[r, c] = network1.weights[i][r, c];
-					if (rng.NextDouble() < 0.05) {
-						newWeight[r, c] *= Math.Pow(rng.NextDouble() - 0.5, 3) * 16 + 1;
+					if (rng.NextDouble() >= 0.05) {
+						newWeight[r, c] = network1.weights[i][r, c];
 					}
 				}
 			}
@@ -106,9 +105,8 @@ public class NeuralNetwork : MonoBehaviour {
 			var newBias = Vector<double>.Build.Random(network1.biases[i].Count);
 
 			for (var c = 0; c < newBias.Count; c++) {
-				newBias[c] = network1.biases[i][c];
-				if (rng.NextDouble() < 0.05) {
-					newBias[c] *= Math.Pow(rng.NextDouble() - 0.5, 3) * 16 + 1;
+				if (rng.NextDouble() >= 0.05) {
+					newBias[c] *= network1.biases[i][c];
 				}
 			}
 			biases[i] = newBias;
