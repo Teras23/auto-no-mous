@@ -96,7 +96,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxAcc: 6
   maxTurn: 30
-  wheelFriction: 1.71
+  wheelFriction: 1.35
   AI: 1
   points: 0
   sensorAngles:

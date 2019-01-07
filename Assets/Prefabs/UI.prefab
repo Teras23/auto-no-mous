@@ -2439,12 +2439,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fdb1dddda35aab40ab26b29471474cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _aiCarPrefab: {fileID: 2350816269097066856, guid: ba04b23fc128a4e438f2cbdd6866faa1,
-    type: 3}
-  _playerCarPrefab: {fileID: 2350816269097066856, guid: 12aaa8a76879fa84c900dbe9baea4135,
+  inGame: 0
+  aiCarPrefab: {fileID: 2350816269097066856, guid: ba04b23fc128a4e438f2cbdd6866faa1,
     type: 3}
   nrOfCars: 25
-  _trackMaker: {fileID: 2780156438211603158}
+  trackMaker: {fileID: 2780156438211603158}
   UIController: {fileID: 7057355428501217110}
 --- !u!1 &6787876952837618315
 GameObject:
