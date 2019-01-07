@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
@@ -81,11 +80,9 @@ public class UIController : MonoBehaviour {
 		if (menuVisible) {
 			collapseButtonText.text = "<";
 			menu.anchoredPosition = Vector2.zero;
-			//menu.localPosition = Vector3.zero;
 		} else {
 			collapseButtonText.text = ">";
 			menu.anchoredPosition = new Vector2(-360, 0);
-			//menu.localPosition = new Vector3(-360, 0);
 		}
 	}
 }

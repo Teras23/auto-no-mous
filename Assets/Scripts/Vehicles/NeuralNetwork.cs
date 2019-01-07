@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
@@ -8,14 +7,13 @@ public class NeuralNetwork : MonoBehaviour {
 	public int[] hiddenLayers;
 	public int inputSize, outputSize;
 
-	static System.Random rng;
+	static System.Random rng = new System.Random();
 
 	Matrix<double>[] weights;
 	Vector<double>[] biases;
 	bool initiated = false; // Was doing calculations before a car was initiated
 
 	void Start() {
-		rng = new System.Random();
 		if (!initiated) {
 			weights = new Matrix<double>[hiddenLayers.Length + 1];
 			biases = new Vector<double>[hiddenLayers.Length + 1];

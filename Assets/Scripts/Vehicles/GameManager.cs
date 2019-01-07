@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
@@ -15,11 +14,10 @@ public class GameManager : MonoBehaviour {
 	public TrackMaker trackMaker;
 	public UIController UIController;
 
-	System.Random rng;
+	System.Random rng = new System.Random();
 
 	void Start() {
 		cars = new GameObject[nrOfCars];
-		rng = new System.Random();
 	}
 
 	void Update() {
