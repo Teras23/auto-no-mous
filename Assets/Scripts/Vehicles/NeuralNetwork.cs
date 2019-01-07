@@ -15,21 +15,7 @@ public class NeuralNetwork : MonoBehaviour {
 
 	void Start() {
 		if (!initiated) {
-			weights = new Matrix<double>[hiddenLayers.Length + 1];
-			biases = new Vector<double>[hiddenLayers.Length + 1];
-
-			// Add all the hidden layers based on user input
-			for (var i = 0; i < hiddenLayers.Length; i++) {
-				var layerSize = hiddenLayers[i];
-				var lastLayerSize = i <= 0 ? inputSize : hiddenLayers[i - 1];
-
-				weights[i] = Matrix<double>.Build.Random(lastLayerSize, layerSize);
-				biases[i] = Vector<double>.Build.Random(layerSize);
-			}
-
-			// Matrix and bias for last hidden layer connection to output
-			weights[hiddenLayers.Length] = Matrix<double>.Build.Random(hiddenLayers[hiddenLayers.Length - 1], outputSize);
-			biases[hiddenLayers.Length] = Vector<double>.Build.Random(outputSize);
+			SetRandom();
 			initiated = true;
 		}
 	}
@@ -68,15 +54,34 @@ public class NeuralNetwork : MonoBehaviour {
 		biases = this.biases;
 	}
 
-	private const double MutationChance = 0.05;
-	private const double MutationChanceBias = 0.05;
-
 	public static void Mutate(GameObject go, out Matrix<double>[] weights, out Vector<double>[] biases) {
 		Mutate(go.GetComponent<NeuralNetwork>(), out weights, out biases);
 	}
 
-	public static void Crossover(GameObject go1, GameObject go2, out Matrix<double>[] weights, out Vector<double>[] biases) {
-		Crossover(go1.GetComponent<NeuralNetwork>(), go2.GetComponent<NeuralNetwork>(), out weights, out biases);
+	public static void FullCrossover(GameObject go1, GameObject go2, out Matrix<double>[] weights, out Vector<double>[] biases) {
+		FullCrossover(go1.GetComponent<NeuralNetwork>(), go2.GetComponent<NeuralNetwork>(), out weights, out biases);
+	}
+
+	public static void LinearCrossover(GameObject go1, GameObject go2, out Matrix<double>[] weights, out Vector<double>[] biases) {
+		LinearCrossover(go1.GetComponent<NeuralNetwork>(), go2.GetComponent<NeuralNetwork>(), out weights, out biases);
+	}
+
+	public void SetRandom() {
+		weights = new Matrix<double>[hiddenLayers.Length + 1];
+		biases = new Vector<double>[hiddenLayers.Length + 1];
+
+		// Add all the hidden layers based on user input
+		for (var i = 0; i < hiddenLayers.Length; i++) {
+			var layerSize = hiddenLayers[i];
+			var lastLayerSize = i <= 0 ? inputSize : hiddenLayers[i - 1];
+
+			weights[i] = Matrix<double>.Build.Random(lastLayerSize, layerSize);
+			biases[i] = Vector<double>.Build.Random(layerSize);
+		}
+
+		// Matrix and bias for last hidden layer connection to output
+		weights[hiddenLayers.Length] = Matrix<double>.Build.Random(hiddenLayers[hiddenLayers.Length - 1], outputSize);
+		biases[hiddenLayers.Length] = Vector<double>.Build.Random(outputSize);
 	}
 
 	public static void Mutate(NeuralNetwork network1, out Matrix<double>[] weights, out Vector<double>[] biases) {
@@ -88,12 +93,9 @@ public class NeuralNetwork : MonoBehaviour {
 
 			for (var r = 0; r < newWeight.RowCount; r++) {
 				for (var c = 0; c < newWeight.ColumnCount; c++) {
-					var choice = rng.NextDouble();
-
-					if (choice > MutationChance) {
-						newWeight[r, c] = network1.weights[i][r, c];
-					} else {
-						newWeight[r, c] *= (rng.NextDouble() * 2) * (rng.Next(2) * 2 - 1);
+					newWeight[r, c] = network1.weights[i][r, c];
+					if (rng.NextDouble() < 0.05) {
+						newWeight[r, c] *= Math.Pow(rng.NextDouble() - 0.5, 3) * 16 + 1;
 					}
 				}
 			}
@@ -104,19 +106,16 @@ public class NeuralNetwork : MonoBehaviour {
 			var newBias = Vector<double>.Build.Random(network1.biases[i].Count);
 
 			for (var c = 0; c < newBias.Count; c++) {
-				var choice = rng.NextDouble();
-
-				if (choice > MutationChanceBias) {
-					newBias[c] = network1.biases[i][c];
-				} else {
-					newBias[c] *= (rng.NextDouble() * 2) * (rng.Next(2) * 2 - 1);
+				newBias[c] = network1.biases[i][c];
+				if (rng.NextDouble() < 0.05) {
+					newBias[c] *= Math.Pow(rng.NextDouble() - 0.5, 3) * 16 + 1;
 				}
 			}
 			biases[i] = newBias;
 		}
 	}
 
-	public static void Crossover(NeuralNetwork network1, NeuralNetwork network2, out Matrix<double>[] weights, out Vector<double>[] biases) {
+	public static void FullCrossover(NeuralNetwork network1, NeuralNetwork network2, out Matrix<double>[] weights, out Vector<double>[] biases) {
 		weights = new Matrix<double>[network1.weights.Length];
 		biases = new Vector<double>[network1.biases.Length];
 
@@ -125,9 +124,7 @@ public class NeuralNetwork : MonoBehaviour {
 
 			for (var r = 0; r < newWeight.RowCount; r++) {
 				for (var c = 0; c < newWeight.ColumnCount; c++) {
-					var choice = rng.NextDouble();
-
-					if (choice < 0.5) {
+					if (rng.NextDouble() < 0.5) {
 						newWeight[r, c] = network1.weights[i][r, c];
 					} else {
 						newWeight[r, c] = network2.weights[i][r, c];
@@ -141,13 +138,38 @@ public class NeuralNetwork : MonoBehaviour {
 			var newBias = Vector<double>.Build.Random(network1.biases[i].Count);
 
 			for (var c = 0; c < newBias.Count; c++) {
-				var choice = rng.NextDouble();
-
-				if (choice < 0.5) {
+				if (rng.NextDouble() < 0.5) {
 					newBias[c] = network1.biases[i][c];
 				} else {
 					newBias[c] = network2.biases[i][c];
 				}
+			}
+			biases[i] = newBias;
+		}
+	}
+
+	public static void LinearCrossover(NeuralNetwork network1, NeuralNetwork network2, out Matrix<double>[] weights, out Vector<double>[] biases) {
+		weights = new Matrix<double>[network1.weights.Length];
+		biases = new Vector<double>[network1.biases.Length];
+
+		for (var i = 0; i < network1.weights.Length; i++) {
+			var newWeight = Matrix<double>.Build.Random(network1.weights[i].RowCount, network1.weights[i].ColumnCount);
+
+			for (var r = 0; r < newWeight.RowCount; r++) {
+				for (var c = 0; c < newWeight.ColumnCount; c++) {
+					double weight = rng.NextDouble();
+					newWeight[r, c] = network1.weights[i][r, c] * weight + network2.weights[i][r, c] * (1 - weight);
+				}
+			}
+			weights[i] = newWeight;
+		}
+
+		for (var i = 0; i < network1.biases.Length; i++) {
+			var newBias = Vector<double>.Build.Random(network1.biases[i].Count);
+
+			for (var c = 0; c < newBias.Count; c++) {
+				double weight = rng.NextDouble();
+				newBias[c] = network1.biases[i][c] * weight + network2.biases[i][c] * (1 - weight);
 			}
 			biases[i] = newBias;
 		}
