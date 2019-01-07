@@ -27,7 +27,7 @@ public class UIController : MonoBehaviour {
 
 	public void TogglePlayMode() {
 		if (!inBuildMode) {
-			if (gameManager.InGame) {
+			if (gameManager.inGame) {
 				LeavePlayMode();
 			} else {
 				EnterPlayMode();
