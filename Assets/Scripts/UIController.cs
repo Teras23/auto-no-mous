@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class UIController : MonoBehaviour {
 	public Slider timeSpeed;
 	public Button playButton;
-	public Toggle participation;
+	public Toggle wallToggle;
 	public InputField levelField;
 	public Button editButton;
     public Text generationText;
@@ -21,6 +21,10 @@ public class UIController : MonoBehaviour {
 		generationText.text = $"Generation: {gameManager.Generation}";
 	}
 
+	public void SetDeadlyWalls() {
+		CarController.wallsAreDeadly = wallToggle.isOn;
+	}
+
 	public void TogglePlayMode() {
 		if (!inBuildMode) {
 			if (gameManager.InGame) {
@@ -33,7 +37,7 @@ public class UIController : MonoBehaviour {
 
 	private void EnterPlayMode() {
 		playButton.GetComponentInChildren<Text>().text = "Stop";
-		gameManager.EnterPlayMode(participation.isOn);
+		gameManager.EnterPlayMode();
 	}
 
 	private void LeavePlayMode() {

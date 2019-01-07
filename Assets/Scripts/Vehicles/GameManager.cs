@@ -46,13 +46,8 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	public void EnterPlayMode(bool includePlayer = false) {
+	public void EnterPlayMode() {
 		InGame = true;
-
-		if (includePlayer) {
-			_playerCar = Instantiate(_playerCarPrefab);
-		}
-
 		ClearCars();
 		SpawnCars();
 	}

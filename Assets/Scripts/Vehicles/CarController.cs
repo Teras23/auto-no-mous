@@ -5,6 +5,7 @@ public class CarController : MonoBehaviour {
 	public float maxAcc, maxTurn, wheelFriction;
 	Rigidbody2D rb;
 	public bool AI;
+	public static bool wallsAreDeadly = false;
 	//Score variables
 	public int points = 0;
 	float startTime, lastTime;
@@ -36,9 +37,10 @@ public class CarController : MonoBehaviour {
 		}
 	}
 
-	private void OnCollisionEnter2D(Collision2D other)
-	{
-		gameObject.SetActive(false);
+	void OnCollisionEnter2D(Collision2D other) {
+		if (wallsAreDeadly) {
+			gameObject.SetActive(false);
+		}
 	}
 
 	void FixedUpdate() {
