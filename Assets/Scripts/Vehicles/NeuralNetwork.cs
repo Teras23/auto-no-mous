@@ -93,7 +93,16 @@ public class NeuralNetwork : MonoBehaviour {
 
 			for (var r = 0; r < newWeight.RowCount; r++) {
 				for (var c = 0; c < newWeight.ColumnCount; c++) {
-					if (rng.NextDouble() >= 0.05) {
+					double choice = rng.NextDouble();
+					if (choice < 0.005) { //Sign change
+						newWeight[r, c] = -network1.weights[i][r, c];
+					} else if (choice < 0.02) { //Additive noise
+						newWeight[r, c] = network1.weights[i][r, c] + rng.NextDouble() * 2 - 1;
+					} else if (choice < 0.035) { //Multiplicative noise
+						newWeight[r, c] = network1.weights[i][r, c] * (rng.NextDouble() + 0.5);
+					} else if (choice < 0.06) { //Keep the new random
+
+					} else { //Keep the old one
 						newWeight[r, c] = network1.weights[i][r, c];
 					}
 				}
@@ -105,8 +114,17 @@ public class NeuralNetwork : MonoBehaviour {
 			var newBias = Vector<double>.Build.Random(network1.biases[i].Count);
 
 			for (var c = 0; c < newBias.Count; c++) {
-				if (rng.NextDouble() >= 0.05) {
-					newBias[c] *= network1.biases[i][c];
+				double choice = rng.NextDouble();
+				if (choice < 0.005) { //Sign change
+					newBias[c] = -network1.biases[i][c];
+				} else if (choice < 0.02) { //Additive noise
+					newBias[c] = network1.biases[i][c] + rng.NextDouble() * 2 - 1;
+				} else if (choice < 0.035) { //Multiplicative noise
+					newBias[c] = network1.biases[i][c] * (rng.NextDouble() + 0.5);
+				} else if (choice < 0.06) { //Keep the new random
+
+				} else { //Keep the old one
+					newBias[c] = network1.biases[i][c];
 				}
 			}
 			biases[i] = newBias;
