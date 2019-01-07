@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
@@ -8,6 +9,9 @@ public class UIController : MonoBehaviour {
 	public InputField levelField;
 	public Button editButton;
     public Text generationText;
+    public Text bestTimeText;
+    public Text bestScoreText;
+    public Text bestCarText;
 	public Text collapseButtonText;
 
 	public TrackMaker trackMaker;
@@ -17,8 +21,20 @@ public class UIController : MonoBehaviour {
 
 	public RectTransform menu;
 
-	public void UpdateInfoPanel() {
-		generationText.text = $"Generation: {gameManager.Generation}";
+	public void UpdateInfoPanel(int genNr, CarController bestCar)
+    {
+        generationText.text = $"Generation: {genNr}";
+        if (genNr > 1)
+        {
+            var hasFinished = bestCar.points > trackMaker.checkpointCounter;
+            var scoreText = hasFinished ? $"{bestCar.points} (max)" : $"{bestCar.points}/{trackMaker.checkpointCounter}";
+            var timeText = hasFinished ? $"{bestCar.TotalTime:F1}s" : "None finished";
+
+            bestScoreText.text = $"Best score: {scoreText}";
+            bestTimeText.text = $"Best time: {timeText}";
+            bestCarText.text = bestCar.name;
+        }
+
 	}
 
 	public void SetDeadlyWalls() {

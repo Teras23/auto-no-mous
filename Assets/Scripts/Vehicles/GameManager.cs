@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
@@ -8,17 +9,8 @@ public class GameManager : MonoBehaviour {
 	bool started = false;
 	public bool inGame;
 	int generation = 1;
-	public int Generation {
-		get {
-			return generation;
-		}
-		set {
-			generation = value;
-			UIController.UpdateInfoPanel();
-		}
-	}
 
-	public GameObject aiCarPrefab;
+    public GameObject aiCarPrefab;
 	public int nrOfCars;
 	public TrackMaker trackMaker;
 	public UIController UIController;
@@ -150,6 +142,7 @@ public class GameManager : MonoBehaviour {
 		cars[cars.Length - 1].name = "AICar (Best car) " + lastCars[0].GetComponent<CarController>().points;
 		cars[cars.Length - 1].GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
 
-		Generation++;
+		generation++;
+        UIController.UpdateInfoPanel(generation, lastCars[0].GetComponent<CarController>());
 	}
 }
