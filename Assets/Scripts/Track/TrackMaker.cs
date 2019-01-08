@@ -44,13 +44,14 @@ public class TrackMaker : MonoBehaviour {
 			if (!Input.GetButtonDown("Fire1") && !eventSystem.IsPointerOverGameObject()) {
 				Remove();
 			}
-			//TODO: Temporary
+			/*
 			if (Input.GetButtonDown("Fire1")) {
 				Ray forward = cam.ScreenPointToRay(Input.mousePosition);
 				new Plane(Vector3.back, Vector3.zero).Raycast(forward, out float distance);
 				Vector3 mouseLoc = forward.origin + forward.direction * distance;
-				Debug.Log(mouseLoc); //TODO: Create pre-built tracks from these locations
+				Debug.Log("    - {x: " + mouseLoc.x + ", y: " + mouseLoc.y + "}"); //TODO: Create pre-built tracks from these locations
 			}
+			*/
 			if (!Input.GetButtonDown("Cancel") && !eventSystem.IsPointerOverGameObject()) {
 				MousePlace();
 			}

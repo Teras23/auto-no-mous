@@ -827,7 +827,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: '[1-200]'
 --- !u!1 &2114445020138495125
 GameObject:
   m_ObjectHideFlags: 0
@@ -2296,7 +2296,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: "Choose level [0-2\x13]"
+  m_Text: Choose level [0-4]
 --- !u!1 &3897060907077994696
 GameObject:
   m_ObjectHideFlags: 0
@@ -6587,12 +6587,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 343e9e1970db70146991f7b4ef531978, type: 3}
---- !u!4 &2509695863004043920 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2627347450279159812, guid: 343e9e1970db70146991f7b4ef531978,
-    type: 3}
-  m_PrefabInstance: {fileID: 477959366141899412}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2780156438211603158 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2321346184040110146, guid: 343e9e1970db70146991f7b4ef531978,
@@ -6605,3 +6599,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9437c3ba139b8a84289f74c6935aced0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2509695863004043920 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2627347450279159812, guid: 343e9e1970db70146991f7b4ef531978,
+    type: 3}
+  m_PrefabInstance: {fileID: 477959366141899412}
+  m_PrefabAsset: {fileID: 0}
