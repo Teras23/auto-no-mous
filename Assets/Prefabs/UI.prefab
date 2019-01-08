@@ -2506,7 +2506,6 @@ MonoBehaviour:
   generationText: {fileID: 4671351535394190495}
   bestTimeText: {fileID: 5557702546657513876}
   bestScoreText: {fileID: 1873839842066464909}
-  bestCarText: {fileID: 0}
   collapseButtonText: {fileID: 369027872900715712}
   trackMaker: {fileID: 2780156438211603158}
   gameManager: {fileID: 3640496923109174979}
@@ -2801,8 +2800,8 @@ MonoBehaviour:
   m_OnEndEdit:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
+      - m_Target: {fileID: 7057355428501217110}
+        m_MethodName: LoadLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
