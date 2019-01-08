@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
@@ -88,18 +86,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Restart() {
-		GameObject[] lastCars = cars.ToArray();
+		GameObject[] lastCars = cars;
 		
 		ClearCars();
 		SpawnCars();
 		
 		for (int i = 0; i < cars.Length; i++) {
-			lastCars[i].GetComponent<NeuralNetwork>()
-				.GetNetwork(out Matrix<double>[] weights, out Vector<double>[] biases);
+			lastCars[i].GetComponent<NeuralNetwork>() .GetNetwork(out Matrix<double>[] weights, out Vector<double>[] biases);
 			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
 			cars[i].name = lastCars[i].name;
-			cars[i].GetComponentInChildren<MeshRenderer>().material.color = 
-				lastCars[i].GetComponentInChildren<MeshRenderer>().material.color;
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = lastCars[i].GetComponentInChildren<MeshRenderer>().material.color;
 		}
 		
 		UIController.UpdateInfoPanel(generation);
@@ -126,7 +122,7 @@ public class GameManager : MonoBehaviour {
 	const float LinearCross = 0.6f;
 
 	void SpawnNewCars() {
-		var lastCars = System.Array.ConvertAll(cars, car => car.GetComponent<CarController>());
+		CarController[] lastCars = System.Array.ConvertAll(cars, car => car.GetComponent<CarController>());
 		System.Array.Sort(lastCars, (car1, car2) => {
 			int diff = car2.points - car1.points;
 			if (diff != 0) {
