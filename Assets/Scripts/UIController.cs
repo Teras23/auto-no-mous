@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using Newtonsoft.Json;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour {
@@ -6,6 +8,8 @@ public class UIController : MonoBehaviour {
 	public Button playButton;
 	public Toggle wallToggle;
 	public InputField levelField;
+	public InputField importExportField;
+	public GameObject importExportPanel;
 	public Button editButton;
 	public Text generationText;
 	public Text bestTimeText;
@@ -113,7 +117,44 @@ public class UIController : MonoBehaviour {
 		gameManager.LeavePlayMode();
 	}
 
-	public void LoadLevel() {
+	public void Import() {
+		try {
+			gameManager.Import(importExportField.text);			
+		}
+		catch (JsonReaderException) {
+			importExportField.text = "Invalid neural network JSON!";
+		}
+	}
+
+	public void Export() {
+		var export = gameManager.ExportBest();
+
+		if (export == null) {
+			importExportField.text = "No best car yet!";
+		}
+		else {
+			importExportField.text = export;
+		}
+
+		// Copying to clipboard
+		try {
+			TextEditor te = new TextEditor {
+				text = export
+			};
+			te.SelectAll();
+			te.Copy();
+		} catch (Exception) { }
+	}
+
+	public void ToggleImportExport() {
+		importExportPanel.SetActive(!importExportPanel.activeSelf);
+	}
+
+	public void RemoveCustomCar() {
+		gameManager.RemoveCustomCar();
+	}
+	
+	public void LoadLevel() {		
 		trackMaker.BuildTrack(int.Parse(levelField.text));
 		if (gameManager.started)
 			gameManager.Restart();
