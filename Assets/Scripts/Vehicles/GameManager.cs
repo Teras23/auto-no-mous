@@ -77,16 +77,25 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Restart() {
-		GameObject[] lastCars = cars;
+		Matrix<double>[][] weights = new Matrix<double>[cars.Length][];
+		Vector<double>[][] biases = new Vector<double>[cars.Length][];
+		string[] names = new string[cars.Length];
+		Color[] colors = new Color[cars.Length];
+		for (int i = 0; i < cars.Length; i++) {
+			cars[i].GetComponent<NeuralNetwork>().GetNetwork(out Matrix<double>[] weight, out Vector<double>[] bias);
+			weights[i] = weight;
+			biases[i] = bias;
+			names[i] = cars[i].name;
+			colors[i] = cars[i].GetComponentInChildren<MeshRenderer>().material.color;
+		}
 		
 		ClearCars();
 		SpawnCars();
 		
 		for (int i = 0; i < cars.Length; i++) {
-			lastCars[i].GetComponent<NeuralNetwork>() .GetNetwork(out Matrix<double>[] weights, out Vector<double>[] biases);
-			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
-			cars[i].name = lastCars[i].name;
-			cars[i].GetComponentInChildren<MeshRenderer>().material.color = lastCars[i].GetComponentInChildren<MeshRenderer>().material.color;
+			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights[i], biases[i]);
+			cars[i].name = names[i];
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = colors[i];
 		}
 		
 		UIController.UpdateInfoPanel(generation);
