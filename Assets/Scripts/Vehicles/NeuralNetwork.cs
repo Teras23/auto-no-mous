@@ -80,7 +80,7 @@ public class NeuralNetwork : MonoBehaviour {
 		}
 
 		// Matrix and bias for last hidden layer connection to output
-		weights[hiddenLayers.Length] = Matrix<double>.Build.Random(hiddenLayers[hiddenLayers.Length - 1], outputSize);
+		weights[hiddenLayers.Length] = Matrix<double>.Build.Random(hiddenLayers.Length > 0 ? hiddenLayers[hiddenLayers.Length - 1] : inputSize, outputSize);
 		biases[hiddenLayers.Length] = Vector<double>.Build.Random(outputSize);
 	}
 

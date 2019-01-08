@@ -5,7 +5,6 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 	GameObject[] cars;
 	public bool started = false;
-	public bool inGame;
 	int generation = 0;
 
     public GameObject aiCarPrefab;
@@ -15,32 +14,25 @@ public class GameManager : MonoBehaviour {
 
 	System.Random rng = new System.Random();
 
-	void Start() {
-		cars = new GameObject[nrOfCars];
-	}
-
 	void Update() {
-		foreach (var car in cars) {
-			if (car != null && car.activeSelf) {
-				return;
-			}
-		}
-
 		if (started) {
+			foreach (var car in cars) {
+				if (car != null && car.activeSelf) {
+					return;
+				}
+			}
+
 			SpawnNewCars();
 		}
 	}
 
 	public void EnterPlayMode() {
 		generation = 0;
-		inGame = true;
-		ClearCars();
 		SpawnCars();
 		UIController.UpdateInfoPanel(generation);
 	}
 
 	public void LeavePlayMode() {
-		inGame = false;
 		started = false;
 		ClearCars();
 	}
@@ -55,6 +47,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	void SpawnCars() {
+		cars = new GameObject[nrOfCars];
 		for (var i = 0; i < nrOfCars; i++) {
 			var car = Instantiate(aiCarPrefab);
 			cars[i] = car;
