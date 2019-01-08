@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
@@ -65,18 +64,16 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void Restart() {
-		GameObject[] lastCars = cars.ToArray();
+		GameObject[] lastCars = cars;
 		
 		ClearCars();
 		SpawnCars();
 		
 		for (int i = 0; i < cars.Length; i++) {
-			lastCars[i].GetComponent<NeuralNetwork>()
-				.GetNetwork(out Matrix<double>[] weights, out Vector<double>[] biases);
+			lastCars[i].GetComponent<NeuralNetwork>() .GetNetwork(out Matrix<double>[] weights, out Vector<double>[] biases);
 			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
 			cars[i].name = lastCars[i].name;
-			cars[i].GetComponentInChildren<MeshRenderer>().material.color = 
-				lastCars[i].GetComponentInChildren<MeshRenderer>().material.color;
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = lastCars[i].GetComponentInChildren<MeshRenderer>().material.color;
 		}
 
 		UIController.UpdateInfoPanel(generation);

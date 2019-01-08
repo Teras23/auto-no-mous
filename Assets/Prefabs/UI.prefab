@@ -2122,7 +2122,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Red \x13- Random restarts"
+  m_Text: Red - Random restarts
 --- !u!1 &6165771570199497708
 GameObject:
   m_ObjectHideFlags: 0

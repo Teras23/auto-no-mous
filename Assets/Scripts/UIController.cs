@@ -7,9 +7,9 @@ public class UIController : MonoBehaviour {
 	public Toggle wallToggle;
 	public InputField levelField;
 	public Button editButton;
-    public Text generationText;
-    public Text bestTimeText;
-    public Text bestScoreText;
+	public Text generationText;
+	public Text bestTimeText;
+	public Text bestScoreText;
 	public Text collapseButtonText;
 
 	public TrackMaker trackMaker;
@@ -19,30 +19,20 @@ public class UIController : MonoBehaviour {
 
 	public RectTransform menu;
 
-	public void UpdateInfoPanel(int genNr, CarController bestCar)
-    {
-        generationText.text = $"Generation: {genNr}";
-        if (genNr > 0)
-        {
-            var hasFinished = bestCar.points == trackMaker.checkpointCounter - 1;
-            var scoreText = hasFinished ? $"{bestCar.points} (max)" : $"{bestCar.points}/{trackMaker.checkpointCounter - 1}";
-            var timeText = hasFinished ? $"{bestCar.TotalTime:F1}s" : "None finished";
-
-            bestScoreText.text = $"Best score: {scoreText}";
-            bestTimeText.text = $"Best time: {timeText}";
-        }
-
-	}
-	
-	public void UpdateInfoPanel(int genNr)
-	{
+	public void UpdateInfoPanel(int genNr, CarController bestCar) {
 		generationText.text = $"Generation: {genNr}";
-		if (genNr > 0)
-		{
-			bestScoreText.text = $"Best score: -";
-			bestTimeText.text = $"Best time: -";
-		}
+		var hasFinished = bestCar.points == trackMaker.checkpointCounter - 1;
+		var scoreText = hasFinished ? $"{bestCar.points} (max)" : $"{bestCar.points}/{trackMaker.checkpointCounter - 1}";
+		var timeText = hasFinished ? $"{bestCar.TotalTime:F1}s" : "None finished";
 
+		bestScoreText.text = $"Best score: {scoreText}";
+		bestTimeText.text = $"Best time: {timeText}";
+	}
+
+	public void UpdateInfoPanel(int genNr) {
+		generationText.text = $"Generation: {genNr}";
+		bestScoreText.text = $"Best score: -";
+		bestTimeText.text = $"Best time: -";
 	}
 
 	public void SetDeadlyWalls() {
@@ -78,11 +68,11 @@ public class UIController : MonoBehaviour {
 	public void ToggleBuildMode() {
 		inBuildMode = !inBuildMode;
 		if (inBuildMode) {
-            editButton.GetComponentInChildren<Text>().text = "Save & exit build";
-            trackMaker.EnterBuildMode();
+			editButton.GetComponentInChildren<Text>().text = "Save & exit build";
+			trackMaker.EnterBuildMode();
 		} else {
-            editButton.GetComponentInChildren<Text>().text = "Enter build mode";
-            trackMaker.LeaveBuildMode();
+			editButton.GetComponentInChildren<Text>().text = "Enter build mode";
+			trackMaker.LeaveBuildMode();
 		}
 	}
 
