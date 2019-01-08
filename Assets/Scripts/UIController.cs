@@ -33,6 +33,17 @@ public class UIController : MonoBehaviour {
         }
 
 	}
+	
+	public void UpdateInfoPanel(int genNr)
+	{
+		generationText.text = $"Generation: {genNr}";
+		if (genNr > 0)
+		{
+			bestScoreText.text = $"Best score: -";
+			bestTimeText.text = $"Best time: -";
+		}
+
+	}
 
 	public void SetDeadlyWalls() {
 		CarController.wallsAreDeadly = wallToggle.isOn;
@@ -60,6 +71,8 @@ public class UIController : MonoBehaviour {
 
 	public void LoadLevel() {
 		trackMaker.BuildTrack(int.Parse(levelField.text));
+		if (gameManager.started)
+			gameManager.Restart();
 	}
 
 	public void ToggleBuildMode() {

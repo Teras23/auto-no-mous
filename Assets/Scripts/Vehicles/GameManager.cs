@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
 	GameObject[] cars;
-	bool started = false;
+	public bool started = false;
 	public bool inGame;
-	int generation = 1;
+	int generation = 0;
 
     public GameObject aiCarPrefab;
 	public int nrOfCars;
@@ -32,10 +33,11 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void EnterPlayMode() {
-		generation = 1;
+		generation = 0;
 		inGame = true;
 		ClearCars();
 		SpawnCars();
+		UIController.UpdateInfoPanel(generation);
 	}
 
 	public void LeavePlayMode() {
@@ -62,6 +64,24 @@ public class GameManager : MonoBehaviour {
 		started = true;
 	}
 
+	public void Restart() {
+		GameObject[] lastCars = cars.ToArray();
+		
+		ClearCars();
+		SpawnCars();
+		
+		for (int i = 0; i < cars.Length; i++) {
+			lastCars[i].GetComponent<NeuralNetwork>()
+				.GetNetwork(out Matrix<double>[] weights, out Vector<double>[] biases);
+			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
+			cars[i].name = lastCars[i].name;
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = 
+				lastCars[i].GetComponentInChildren<MeshRenderer>().material.color;
+		}
+
+		UIController.UpdateInfoPanel(generation);
+	}
+	
 	void SelectPair(CarController[] cars, out CarController car1, out CarController car2) {
 		int choice1 = rng.Next(cars.Length);
 		int choice2 = 0;
@@ -98,7 +118,7 @@ public class GameManager : MonoBehaviour {
 		});
 		System.Array.Resize(ref lastCars, Mathf.RoundToInt(Elite * 4 * nrOfCars));
 
-		UIController.UpdateInfoPanel(generation++, lastCars[0]);
+		UIController.UpdateInfoPanel(++generation, lastCars[0]);
 
 		ClearCars();
 		SpawnCars();
