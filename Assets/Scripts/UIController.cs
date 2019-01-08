@@ -16,12 +16,64 @@ public class UIController : MonoBehaviour {
 	public Text bestScoreText;
 	public Text collapseButtonText;
 
+	public InputField carCountField;
+	public InputField hiddenLayerField;
+	public InputField layer1Field;
+	public InputField layer2Field;
+	public InputField layer3Field;
+
 	public TrackMaker trackMaker;
 	bool inBuildMode = false;
 	bool menuVisible = true;
 	public GameManager gameManager;
+	public NeuralNetwork carPrefab;
 
 	public RectTransform menu;
+	public GameObject networkGroup;
+
+	public void UpdateCarCount() {
+		if (int.TryParse(carCountField.text, out int carCount)) {
+			if (carCount > 0 && carCount <= 200) {
+				gameManager.nrOfCars = carCount;
+			}
+		}
+	}
+
+	public void UpdateNetworkValues() {
+		if (!int.TryParse(hiddenLayerField.text, out int hiddenLayers)) {
+			return;
+		}
+		if (hiddenLayers < 0) {
+			hiddenLayers = 0;
+		} else if (hiddenLayers > 3) {
+			hiddenLayers = 3;
+		}
+
+		if (!int.TryParse(layer1Field.text, out int layer1Size) && hiddenLayers >= 1) {
+			return;
+		}
+		if (!int.TryParse(layer2Field.text, out int layer2Size) && hiddenLayers >= 2) {
+			return;
+		}
+		if (!int.TryParse(layer3Field.text, out int layer3Size) && hiddenLayers >= 3) {
+			return;
+		}
+
+		switch (hiddenLayers) {
+			case 0:
+				carPrefab.hiddenLayers = new int[0];
+				break;
+			case 1:
+				carPrefab.hiddenLayers = new int[] { layer1Size };
+				break;
+			case 2:
+				carPrefab.hiddenLayers = new int[] { layer1Size, layer2Size };
+				break;
+			case 3:
+				carPrefab.hiddenLayers = new int[] { layer1Size, layer2Size, layer3Size };
+				break;
+		}
+	}
 
 	public void UpdateInfoPanel(int genNr, CarController bestCar) {
 		generationText.text = $"Generation: {genNr}";
@@ -45,7 +97,7 @@ public class UIController : MonoBehaviour {
 
 	public void TogglePlayMode() {
 		if (!inBuildMode) {
-			if (gameManager.inGame) {
+			if (gameManager.started) {
 				LeavePlayMode();
 			} else {
 				EnterPlayMode();
@@ -55,11 +107,13 @@ public class UIController : MonoBehaviour {
 
 	private void EnterPlayMode() {
 		playButton.GetComponentInChildren<Text>().text = "Stop";
+		networkGroup.SetActive(false);
 		gameManager.EnterPlayMode();
 	}
 
 	private void LeavePlayMode() {
 		playButton.GetComponentInChildren<Text>().text = "Start training";
+		networkGroup.SetActive(true);
 		gameManager.LeavePlayMode();
 	}
 
@@ -67,7 +121,7 @@ public class UIController : MonoBehaviour {
 		try {
 			gameManager.Import(importExportField.text);			
 		}
-		catch (JsonReaderException e) {
+		catch (JsonReaderException) {
 			importExportField.text = "Invalid neural network JSON!";
 		}
 	}
@@ -84,14 +138,12 @@ public class UIController : MonoBehaviour {
 
 		// Copying to clipboard
 		try {
-			TextEditor te = new TextEditor();
-			te.text = export;
+			TextEditor te = new TextEditor {
+				text = export
+			};
 			te.SelectAll();
 			te.Copy();
-		}
-		catch (Exception e) {
-			
-		}
+		} catch (Exception) { }
 	}
 
 	public void ToggleImportExport() {
