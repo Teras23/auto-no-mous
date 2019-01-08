@@ -2,6 +2,7 @@
 using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
+using Newtonsoft.Json.Linq;
 
 public class NeuralNetwork : MonoBehaviour {
 	public int[] hiddenLayers;
@@ -188,6 +189,72 @@ public class NeuralNetwork : MonoBehaviour {
 				newBias[c] = network1.biases[i][c] * weight + network2.biases[i][c] * (1 - weight);
 			}
 			biases[i] = newBias;
+		}
+	}
+
+	public static string Export(Matrix<double>[] weights, Vector<double>[] biases) {
+		var o = new JObject();
+
+		var matrices = new JArray();
+		
+		foreach (var m in weights) {
+			var matrix = new JArray();
+			foreach (var i in m.ToRowArrays()) {
+				var r = new JArray();
+				foreach (var j in i) {
+					r.Add(j);
+				}
+				matrix.Add(r);
+			}
+			matrices.Add(matrix);
+		}
+
+		o["weights"] = matrices;
+		
+		var vectors = new JArray();
+
+		foreach (var v in biases) {
+			var vector = new JArray();
+			foreach (var i in v) {
+				vector.Add(i);
+			}
+			vectors.Add(vector);
+		}
+
+		o["biases"] = vectors;
+		
+		return o.ToString();
+	}
+
+	public static void Import(String nn, out Matrix<double>[] weights, out Vector<double>[] biases) {
+		var o = JObject.Parse(nn);
+
+		JArray matrices = (JArray)o["weights"];
+		JArray vectors = (JArray)o["biases"];
+		
+		weights = new Matrix<double>[matrices.Count];
+		biases = new Vector<double>[vectors.Count];
+
+		for (var m = 0; m < matrices.Count; m++) {
+			JArray matrixArray = (JArray)matrices[m];
+			var matrix = Matrix<double>.Build.Random(matrixArray.Count, ((JArray)matrixArray[0]).Count);
+			for (var i = 0; i < matrixArray.Count; i++) {
+				JArray r = (JArray) matrixArray[i];
+				
+				for (var j = 0; j < r.Count; j++) {
+					matrix[i, j] = (double) r[j];
+				}
+			}
+			weights[m] = matrix;
+		}
+
+		for (var v = 0; v < vectors.Count; v++) {
+			JArray vectorArray = (JArray)vectors[v];
+			var vector = Vector<double>.Build.Random(vectorArray.Count);
+			for (var i = 0; i < vectorArray.Count; i++) {
+				vector[i] = (double) vectorArray[i];
+			}
+			biases[v] = vector;
 		}
 	}
 }
