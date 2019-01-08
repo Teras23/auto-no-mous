@@ -258,6 +258,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6883502672396747925, guid: 6d14318299507614bb01e7ff4969f191,
+        type: 3}
+      propertyPath: m_Text
+      value: "Choose level [0-2\x13]"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6d14318299507614bb01e7ff4969f191, type: 3}
 --- !u!1001 &1726418323
