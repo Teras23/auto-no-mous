@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using UnityEngine;
 
@@ -33,6 +32,7 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void EnterPlayMode() {
+		generation = 1;
 		inGame = true;
 		ClearCars();
 		SpawnCars();
@@ -62,85 +62,91 @@ public class GameManager : MonoBehaviour {
 		started = true;
 	}
 
-	const float Mutate = 0.4f;
-	const float Crossover = 0.3f;
+	void SelectPair(CarController[] cars, out CarController car1, out CarController car2) {
+		int choice1 = rng.Next(cars.Length);
+		int choice2 = 0;
+		do {
+			choice2 = rng.Next(cars.Length);
+		} while (choice2 == choice1);
 
-	GameObject SelectBiasBest(List<GameObject> cars, int pointsTotal) {
-		var randomPoints = rng.Next(pointsTotal);
-
-		var totalIterator = 0;
-
-		foreach (var car in cars) {
-			totalIterator += car.GetComponent<CarController>().points;
-
-			if (totalIterator >= randomPoints) {
-				return car;
-			}
-		}
-
-		return cars.Last();
+		car1 = cars[choice1];
+		car2 = cars[choice2];
 	}
 
-	void SpawnNewCars() {
-		for (var i = 0; i < cars.Length; i++) {
-			if (cars[i].GetComponent<CarController>().points == trackMaker.checkpointCounter - 1) {
-				cars[i].GetComponent<CarController>().points *= 2;
-			}
-		}
+	CarController SelectOne(CarController[] cars) {
+		return cars[rng.Next(cars.Length)];
+	}
 
-		var lastCars = cars.OrderByDescending(go => go.GetComponent<CarController>().points).ThenBy(go => go.GetComponent<CarController>().TotalTime).ToList();
+	const float Elite = 0.1f;
+	const float Newbie = 0.2f;
+	const float FullCross = 0.4f;
+	const float LinearCross = 0.6f;
+
+	void SpawnNewCars() {
+		CarController[] lastCars = System.Array.ConvertAll(cars, car => car.GetComponent<CarController>());
+		System.Array.Sort(lastCars, (car1, car2) => {
+			int diff = car2.points - car1.points;
+			if (diff != 0) {
+				return diff;
+			} else {
+				if (car1.TotalTime == car2.TotalTime) {
+					return 0;
+				} else {
+					return car1.TotalTime > car2.TotalTime ? 1 : -1;
+				}
+			}
+		});
+		System.Array.Resize(ref lastCars, Mathf.RoundToInt(Elite * 4 * nrOfCars));
+
+		UIController.UpdateInfoPanel(generation++, lastCars[0]);
 
 		ClearCars();
 		SpawnCars();
 
-		var pointsTotal = 0;
+		//Keep best cars
+		for (int i = 0; i < Mathf.RoundToInt(Elite * nrOfCars); i++) {
+			lastCars[i].GetComponent<NeuralNetwork>().GetNetwork(out Matrix<double>[] bestWeights, out Vector<double>[] bestBiases);
+			cars[i].GetComponent<NeuralNetwork>().SetNetwork(bestWeights, bestBiases);
+			cars[i].name = "Best car " + lastCars[i].points + "p " + lastCars[i].TotalTime + "t";
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.HSVToRGB(0.2f, 1, 1);
 
-		foreach (var car in lastCars) {
-			pointsTotal += car.GetComponent<CarController>().points;
 		}
 
-		// Mutate best cars
-		for (var i = 0; i < (int) (nrOfCars * Mutate); i++) {
-			var selectedCar = SelectBiasBest(lastCars, pointsTotal);
-
-			NeuralNetwork.Mutate(selectedCar, out Matrix<double>[] weights, out Vector<double>[] biases);
-			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
-			cars[i].name = "AICar (Mutated) " + selectedCar.GetComponent<CarController>().points;
-			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.green;
-		}
-
-		// Crossover best cars
-		for (var i = (int) (nrOfCars * Mutate); i < (int) (nrOfCars * (Mutate + Crossover)); i++) {
-			var selectedCar1 = SelectBiasBest(lastCars, pointsTotal);
-			var selectedCar2 = SelectBiasBest(lastCars, pointsTotal);
-
-			NeuralNetwork.Crossover(selectedCar1, selectedCar2, out Matrix<double>[] weights, out Vector<double>[] biases);
-			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
-			cars[i].name = "AICar (Crossed) " + selectedCar1.GetComponent<CarController>().points + " " + selectedCar2.GetComponent<CarController>().points;
-			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.blue;
-		}
-
-		// Crossover and mutate the rest of the cars
-		for (var i = (int) (nrOfCars * (Mutate + Crossover)); i < cars.Length - 1; i++) {
-			var selectedCar1 = SelectBiasBest(lastCars, pointsTotal);
-			var selectedCar2 = SelectBiasBest(lastCars, pointsTotal);
-
-			NeuralNetwork.Crossover(selectedCar1, selectedCar2, out Matrix<double>[] weights, out Vector<double>[] biases);
-			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
-			NeuralNetwork.Mutate(cars[i], out weights, out biases);
-			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
-			cars[i].name = "AICar (Mutated and crossed) " + selectedCar1.GetComponent<CarController>().points + " " + selectedCar2.GetComponent<CarController>().points;
-			;
+		//Generate new cars
+		for (int i = Mathf.RoundToInt(Elite * nrOfCars); i < Mathf.RoundToInt(Newbie * nrOfCars); i++) {
+			cars[i].GetComponent<NeuralNetwork>().SetRandom();
+			cars[i].name = "Random restart";
 			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.red;
 		}
 
-		// Last car is the best car
-		lastCars[0].GetComponent<NeuralNetwork>().GetNetwork(out Matrix<double>[] bestWeights, out Vector<double>[] bestBiases);
-		cars[cars.Length - 1].GetComponent<NeuralNetwork>().SetNetwork(bestWeights, bestBiases);
-		cars[cars.Length - 1].name = "AICar (Best car) " + lastCars[0].GetComponent<CarController>().points;
-		cars[cars.Length - 1].GetComponentInChildren<MeshRenderer>().material.color = Color.yellow;
+		//Full cross best cars
+		for (int i = Mathf.RoundToInt(Newbie * nrOfCars); i < Mathf.RoundToInt(FullCross * nrOfCars); i++) {
+			SelectPair(lastCars, out var selectedCar1, out var selectedCar2);
 
-		generation++;
-        UIController.UpdateInfoPanel(generation, lastCars[0].GetComponent<CarController>());
+			NeuralNetwork.FullCrossover(selectedCar1.gameObject, selectedCar2.gameObject, out Matrix<double>[] weights, out Vector<double>[] biases);
+			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
+			cars[i].name = "Full cross (" + selectedCar1.points + "p " + selectedCar1.TotalTime + "t) & (" + selectedCar2.points + "p " + selectedCar2.TotalTime + "t)";
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.HSVToRGB(0.4f, 1, 1);
+		}
+
+		//Linear cross best cars
+		for (int i = Mathf.RoundToInt(FullCross * nrOfCars); i < Mathf.RoundToInt(LinearCross * nrOfCars); i++) {
+			SelectPair(lastCars, out var selectedCar1, out var selectedCar2);
+
+			NeuralNetwork.LinearCrossover(selectedCar1.gameObject, selectedCar2.gameObject, out Matrix<double>[] weights, out Vector<double>[] biases);
+			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
+			cars[i].name = "Linear cross (" + selectedCar1.points + "p " + selectedCar1.TotalTime + "t) & (" + selectedCar2.points + "p " + selectedCar2.TotalTime + "t)";
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.HSVToRGB(0.6f, 1, 1);
+		}
+
+		//Mutate best cars
+		for (int i = Mathf.RoundToInt(LinearCross * nrOfCars); i < cars.Length; i++) {
+			var selectedCar = SelectOne(lastCars);
+
+			NeuralNetwork.Mutate(selectedCar.gameObject, out Matrix<double>[] weights, out Vector<double>[] biases);
+			cars[i].GetComponent<NeuralNetwork>().SetNetwork(weights, biases);
+			cars[i].name = "Mutant " + selectedCar.points + "p " + selectedCar.TotalTime + "t";
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.HSVToRGB(0.8f, 1, 1);
+		}
 	}
 }

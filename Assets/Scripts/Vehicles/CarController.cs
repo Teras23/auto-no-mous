@@ -46,8 +46,8 @@ public class CarController : MonoBehaviour {
 	void FixedUpdate() {
 		if (AI) {
 			List<double> inputs = new List<double>(System.Array.ConvertAll<Vector2, double>(sensorDirections, direction => {
-				RaycastHit2D hit = Physics2D.Raycast(rb.position, rb.GetRelativeVector(direction), float.PositiveInfinity, LayerMask.GetMask("Wall"));
-				return hit ? hit.distance : float.MaxValue;
+				RaycastHit2D hit = Physics2D.Raycast(rb.position, rb.GetRelativeVector(direction), 256, LayerMask.GetMask("Wall"));
+				return hit ? hit.distance : 256;
 			})) {
 				Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.right)),
 				Vector2.Dot(rb.velocity, rb.GetRelativeVector(Vector2.down))

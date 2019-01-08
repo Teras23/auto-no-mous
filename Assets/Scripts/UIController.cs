@@ -22,10 +22,10 @@ public class UIController : MonoBehaviour {
 	public void UpdateInfoPanel(int genNr, CarController bestCar)
     {
         generationText.text = $"Generation: {genNr}";
-        if (genNr > 1)
+        if (genNr > 0)
         {
-            var hasFinished = bestCar.points > trackMaker.checkpointCounter;
-            var scoreText = hasFinished ? $"{bestCar.points} (max)" : $"{bestCar.points}/{trackMaker.checkpointCounter}";
+            var hasFinished = bestCar.points == trackMaker.checkpointCounter - 1;
+            var scoreText = hasFinished ? $"{bestCar.points} (max)" : $"{bestCar.points}/{trackMaker.checkpointCounter - 1}";
             var timeText = hasFinished ? $"{bestCar.TotalTime:F1}s" : "None finished";
 
             bestScoreText.text = $"Best score: {scoreText}";
