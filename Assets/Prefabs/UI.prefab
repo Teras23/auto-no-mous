@@ -719,7 +719,7 @@ GameObject:
   - component: {fileID: 8710901239050087583}
   - component: {fileID: 6088744722018134253}
   m_Layer: 5
-  m_Name: Red
+  m_Name: Yellow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -765,7 +765,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.8, g: 1, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -785,7 +785,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Red - Current best cars
+  m_Text: Yellow - Current best cars
 --- !u!1 &3073302759944139480
 GameObject:
   m_ObjectHideFlags: 0
@@ -2056,7 +2056,7 @@ GameObject:
   - component: {fileID: 8992800211992886256}
   - component: {fileID: 1467430378154285833}
   m_Layer: 5
-  m_Name: Yellow
+  m_Name: Red
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2102,7 +2102,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.79999995, g: 1, b: 0, a: 1}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -2122,7 +2122,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Yellow - Random restarts
+  m_Text: "Red \x13- Random restarts"
 --- !u!1 &6165771570199497708
 GameObject:
   m_ObjectHideFlags: 0

@@ -108,14 +108,15 @@ public class GameManager : MonoBehaviour {
 			lastCars[i].GetComponent<NeuralNetwork>().GetNetwork(out Matrix<double>[] bestWeights, out Vector<double>[] bestBiases);
 			cars[i].GetComponent<NeuralNetwork>().SetNetwork(bestWeights, bestBiases);
 			cars[i].name = "Best car " + lastCars[i].points + "p " + lastCars[i].TotalTime + "t";
-			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.red;
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.HSVToRGB(0.2f, 1, 1);
+
 		}
 
 		//Generate new cars
 		for (int i = Mathf.RoundToInt(Elite * nrOfCars); i < Mathf.RoundToInt(Newbie * nrOfCars); i++) {
 			cars[i].GetComponent<NeuralNetwork>().SetRandom();
 			cars[i].name = "Random restart";
-			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.HSVToRGB(0.2f, 1, 1);
+			cars[i].GetComponentInChildren<MeshRenderer>().material.color = Color.red;
 		}
 
 		//Full cross best cars
